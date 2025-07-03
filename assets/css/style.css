@@ -1,0 +1,443 @@
+/* KIA SERVICED APARTMENT - Minimalist Pink & Black Theme */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-pink: #ff69b4;
+    --dark-pink: #e91e63;
+    --light-pink: #ffc0cb;
+    --black: #1a1a1a;
+    --dark-gray: #2d2d2d;
+    --light-gray: #f5f5f5;
+    --white: #ffffff;
+    --success: #4caf50;
+    --warning: #ff9800;
+    --info: #2196f3;
+    --danger: #f44336;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--black) 0%, var(--dark-gray) 100%);
+    color: var(--white);
+    min-height: 100vh;
+}
+
+/* Header */
+.header {
+    background: var(--black);
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 10px rgba(255, 105, 180, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--primary-pink);
+    text-decoration: none;
+}
+
+.nav-toggle {
+    background: var(--primary-pink);
+    color: var(--white);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.nav-toggle:hover {
+    background: var(--dark-pink);
+    transform: translateY(-2px);
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+    background: var(--dark-gray);
+    margin: 10% auto;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
+}
+
+.close {
+    color: var(--primary-pink);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: var(--dark-pink);
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--primary-pink);
+    font-weight: 500;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--dark-gray);
+    border-radius: 5px;
+    background: var(--black);
+    color: var(--white);
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-pink);
+}
+
+/* Buttons */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    transition: all 0.3s ease;
+    margin: 0.25rem;
+}
+
+.btn-primary {
+    background: var(--primary-pink);
+    color: var(--white);
+}
+
+.btn-primary:hover {
+    background: var(--dark-pink);
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background: var(--success);
+    color: var(--white);
+}
+
+.btn-warning {
+    background: var(--warning);
+    color: var(--white);
+}
+
+.btn-info {
+    background: var(--info);
+    color: var(--white);
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: var(--white);
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Filters */
+.filters {
+    background: var(--dark-gray);
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.filter-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: end;
+}
+
+.filter-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* Room Cards */
+.rooms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.room-card {
+    background: var(--dark-gray);
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    border: 3px solid transparent;
+}
+
+.room-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(255, 105, 180, 0.2);
+}
+
+/* Room Status Colors */
+.room-card.ready {
+    border-color: var(--success);
+}
+
+.room-card.booked {
+    border-color: var(--warning);
+}
+
+.room-card.checkin {
+    border-color: var(--info);
+}
+
+.room-card.checkout {
+    border-color: var(--danger);
+}
+
+.room-status {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+
+.status-ready {
+    background: var(--success);
+    color: var(--white);
+}
+
+.status-booked {
+    background: var(--warning);
+    color: var(--white);
+}
+
+.status-checkin {
+    background: var(--info);
+    color: var(--white);
+}
+
+.status-checkout {
+    background: var(--danger);
+    color: var(--white);
+}
+
+.room-info h3 {
+    color: var(--primary-pink);
+    margin-bottom: 0.5rem;
+}
+
+.room-details {
+    margin: 1rem 0;
+}
+
+.room-details p {
+    margin: 0.25rem 0;
+    color: var(--light-gray);
+}
+
+/* Guest Info */
+.guest-info {
+    background: var(--black);
+    padding: 1rem;
+    border-radius: 5px;
+    margin: 1rem 0;
+    border-left: 4px solid var(--primary-pink);
+}
+
+.guest-info h4 {
+    color: var(--primary-pink);
+    margin-bottom: 0.5rem;
+}
+
+/* Countdown Timer */
+.countdown {
+    background: var(--black);
+    padding: 1rem;
+    border-radius: 5px;
+    text-align: center;
+    margin: 1rem 0;
+    border: 2px solid var(--primary-pink);
+}
+
+.countdown-timer {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-pink);
+    margin: 0.5rem 0;
+}
+
+.countdown.expired {
+    border-color: var(--danger);
+    background: rgba(244, 67, 54, 0.1);
+}
+
+.countdown.expired .countdown-timer {
+    color: var(--danger);
+}
+
+/* Action Buttons */
+.room-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+/* Tables */
+.table-container {
+    background: var(--dark-gray);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    margin: 2rem 0;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--black);
+}
+
+.table th {
+    background: var(--black);
+    color: var(--primary-pink);
+    font-weight: bold;
+}
+
+.table tr:hover {
+    background: rgba(255, 105, 180, 0.1);
+}
+
+/* Footer */
+.footer {
+    background: var(--black);
+    text-align: center;
+    padding: 2rem;
+    margin-top: 3rem;
+    border-top: 2px solid var(--primary-pink);
+}
+
+.footer p {
+    color: var(--light-gray);
+    margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header-content {
+        padding: 0 1rem;
+    }
+    
+    .container {
+        padding: 1rem;
+    }
+    
+    .filter-row {
+        flex-direction: column;
+    }
+    
+    .rooms-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .room-actions {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+}
+
+/* Alerts */
+.alert {
+    padding: 1rem;
+    border-radius: 5px;
+    margin: 1rem 0;
+    border-left: 4px solid;
+}
+
+.alert-success {
+    background: rgba(76, 175, 80, 0.1);
+    border-color: var(--success);
+    color: var(--success);
+}
+
+.alert-warning {
+    background: rgba(255, 152, 0, 0.1);
+    border-color: var(--warning);
+    color: var(--warning);
+}
+
+.alert-danger {
+    background: rgba(244, 67, 54, 0.1);
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+.alert-info {
+    background: rgba(33, 150, 243, 0.1);
+    border-color: var(--info);
+    color: var(--info);
+}
