@@ -8,7 +8,7 @@ if (!isLoggedIn()) {
 $booking_id = $_GET['booking_id'] ?? 0;
 
 // Get booking details
-$stmt = $pdo->prepare("SELECT b.*, r.room_number, r.location, r.room_type, u.full_name as created_by_name 
+$stmt = $pdo->prepare("SELECT b.*, r.room_number, r.location, r.room_type, r.wifi_name, r.wifi_password, u.full_name as created_by_name 
                       FROM bookings b 
                       JOIN rooms r ON b.room_id = r.id 
                       JOIN users u ON b.created_by = u.id 
@@ -52,6 +52,8 @@ $total_amount = $booking['price_amount'] + $booking['extra_time_amount'] - $book
             <p><strong>Phone:</strong> <?php echo htmlspecialchars($booking['phone_number']); ?></p>
             <p><strong>Room:</strong> <?php echo htmlspecialchars($booking['location'] . ' - ' . $booking['room_number']); ?></p>
             <p><strong>Room Type:</strong> <?php echo htmlspecialchars($booking['room_type']); ?></p>
+            <p><strong>WiFi:</strong> <?php echo htmlspecialchars($booking['wifi_name']); ?></p>
+            <p><strong>WiFi Password:</strong> <?php echo htmlspecialchars($booking['wifi_password']); ?></p>
             <p><strong>Duration:</strong> <?php echo $booking['duration_hours']; ?> hours (<?php echo ucfirst($booking['duration_type']); ?>)</p>
             <?php if ($booking['extra_time_hours'] > 0): ?>
                 <p><strong>Extra Time:</strong> <?php echo $booking['extra_time_hours']; ?> hours</p>
@@ -74,7 +76,8 @@ $total_amount = $booking['price_amount'] + $booking['extra_time_amount'] - $book
         </div>
         
         <div style="text-align: center; margin-top: 20px;">
-            <p>Thank you for staying with us!</p>
+            <p>Terima kasih telah menggunakan layanan kami!</p>
+            <p>Thank you for using our services!</p>
             <p>Served by: <?php echo htmlspecialchars($booking['created_by_name']); ?></p>
         </div>
         

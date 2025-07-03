@@ -146,64 +146,104 @@ function bookRoom(roomId) {
 function createBookingModal(roomId) {
     const modal = document.createElement('div');
     modal.className = 'modal';
+    modal.style.display = 'block';
+    
     modal.innerHTML = `
-        <div class="modal-content">
+        <div class="modal-content booking-modal">
             <span class="close">&times;</span>
             <h2>Book Room</h2>
-            <form id="bookingForm">
-                <div class="form-group">
-                    <label>Guest Name:</label>
-                    <input type="text" name="guest_name" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label>Phone Number:</label>
-                    <input type="tel" name="phone_number" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label>Arrival Time:</label>
-                    <input type="datetime-local" name="arrival_time" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label>Duration Type:</label>
-                    <select name="duration_type" class="form-control" required>
-                        <option value="hourly">Per Jam</option>
-                        <option value="fullday">Full Day</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Duration (Hours):</label>
-                    <input type="number" name="duration_hours" class="form-control" min="1" required>
-                </div>
-                <div class="form-group">
-                    <label>Price Amount:</label>
-                    <input type="number" name="price_amount" class="form-control" min="0" step="1000" required>
-                </div>
-                <div class="form-group">
-                    <label>Payment Method:</label>
-                    <select name="payment_method" class="form-control" required>
-                        <option value="cash">Cash</option>
-                        <option value="transfer">Transfer</option>
-                        <option value="card">Card</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Deposit Type:</label>
-                    <select name="deposit_type" class="form-control" required>
-                        <option value="cash">Cash</option>
-                        <option value="id_card">ID Card</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Deposit Amount:</label>
-                    <input type="number" name="deposit_amount" class="form-control" min="0" step="1000">
-                </div>
-                <div class="form-group">
-                    <label>Notes:</label>
-                    <textarea name="notes" class="form-control" rows="3"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Book Room</button>
-                <button type="button" class="btn btn-secondary" onclick="closeModal(this)">Cancel</button>
-            </form>
+            <div class="booking-form-container">
+                <form id="bookingForm">
+                    <!-- Guest Information Section -->
+                    <div class="form-section">
+                        <h3 class="section-title">Guest Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="guest_name">Guest Name:</label>
+                                <input type="text" id="guest_name" name="guest_name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone_number">Phone Number:</label>
+                                <input type="tel" id="phone_number" name="phone_number" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Booking Details Section -->
+                    <div class="form-section">
+                        <h3 class="section-title">Booking Details</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="arrival_time">Arrival Time:</label>
+                                <input type="datetime-local" id="arrival_time" name="arrival_time" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="duration_type">Duration Type:</label>
+                                <select id="duration_type" name="duration_type" class="form-control" required>
+                                    <option value="hourly">Hourly</option>
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="duration_hours">Duration (Hours):</label>
+                                <input type="number" id="duration_hours" name="duration_hours" class="form-control" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="price_amount">Price Amount:</label>
+                                <input type="number" id="price_amount" name="price_amount" class="form-control" step="0.01" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Information Section -->
+                    <div class="form-section">
+                        <h3 class="section-title">Payment Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="payment_method">Payment Method:</label>
+                                <select id="payment_method" name="payment_method" class="form-control" required>
+                                    <option value="cash">Cash</option>
+                                    <option value="transfer">Transfer</option>
+                                    <option value="card">Card</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="deposit_type">Deposit Type:</label>
+                                <select id="deposit_type" name="deposit_type" class="form-control" required>
+                                    <option value="none">No Deposit</option>
+                                    <option value="cash">Cash Deposit</option>
+                                    <option value="id_card">ID Card</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="deposit_amount">Deposit Amount:</label>
+                                <input type="number" id="deposit_amount" name="deposit_amount" class="form-control" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Notes Section -->
+                    <div class="form-section">
+                        <h3 class="section-title">Additional Notes</h3>
+                        <div class="form-group">
+                            <label for="notes">Notes:</label>
+                            <textarea id="notes" name="notes" class="form-control" rows="3" placeholder="Any special requests or notes..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Book Room</button>
+                        <button type="button" class="btn btn-danger" onclick="closeModal(this)">Cancel</button>
+                    </div>
+                </form>
+            </div>
         </div>
     `;
     
