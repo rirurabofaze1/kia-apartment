@@ -75,7 +75,7 @@ function filterRooms() {
 }
 
 function startCountdownTimers() {
-    const countdownElements = document.querySelectorAll('.countdown-timer');
+    const countdownElements = document.querySelectorAll('.countdown-timer, .countdown-timer-large');
     
     countdownElements.forEach(element => {
         const targetTime = element.dataset.target;
@@ -97,15 +97,32 @@ function updateCountdown(element, targetTime) {
         const seconds = Math.floor((difference % (1000 * 60)) / 1000);
         
         element.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        element.parentElement.classList.remove('expired');
+        
+        // Handle different countdown styles
+        if (element.classList.contains('countdown-timer-large')) {
+            // For countdown page - add urgent class if less than 15 minutes
+            if (difference <= 15 * 60 * 1000) {
+                element.classList.add('urgent');
+            } else {
+                element.classList.remove('urgent');
+            }
+        } else {
+            // For regular countdown timers
+            element.parentElement.classList.remove('expired');
+        }
     } else {
         element.textContent = 'EXPIRED';
-        element.parentElement.classList.add('expired');
         
-        // Show confirmation buttons for expired bookings
-        const confirmationDiv = element.parentElement.parentElement.querySelector('.confirmation-buttons');
-        if (confirmationDiv) {
-            confirmationDiv.style.display = 'block';
+        if (element.classList.contains('countdown-timer-large')) {
+            element.classList.add('urgent');
+        } else {
+            element.parentElement.classList.add('expired');
+            
+            // Show confirmation buttons for expired bookings
+            const confirmationDiv = element.parentElement.parentElement.querySelector('.confirmation-buttons');
+            if (confirmationDiv) {
+                confirmationDiv.style.display = 'block';
+            }
         }
     }
 }

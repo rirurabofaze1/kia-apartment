@@ -598,3 +598,98 @@ body {
     border-color: var(--info);
     color: var(--info);
 }
+
+/* Quick Actions */
+.quick-actions {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.btn-countdown {
+    background: linear-gradient(135deg, var(--primary-pink) 0%, var(--dark-pink) 100%);
+    color: var(--white);
+    padding: 1.5rem 2rem;
+    border-radius: 15px;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 8px 25px rgba(255, 105, 180, 0.4);
+    transition: all 0.3s ease;
+    border: 3px solid transparent;
+    position: relative;
+    overflow: hidden;
+    min-width: 200px;
+}
+
+.btn-countdown::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-countdown:hover::before {
+    left: 100%;
+}
+
+.btn-countdown:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(255, 105, 180, 0.6);
+    border-color: var(--white);
+}
+
+.countdown-icon {
+    font-size: 2rem;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+.btn-countdown span {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.btn-countdown small {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    font-weight: normal;
+}
+
+/* Responsive Quick Actions */
+@media (max-width: 768px) {
+    .btn-countdown {
+        padding: 1.2rem 1.5rem;
+        min-width: 180px;
+    }
+    
+    .countdown-icon {
+        font-size: 1.5rem;
+    }
+    
+    .btn-countdown span {
+        font-size: 1rem;
+    }
+    
+    .btn-countdown small {
+        font-size: 0.8rem;
+    }
+}

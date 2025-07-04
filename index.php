@@ -74,6 +74,15 @@ $roomTypes = array_unique(array_column($rooms, 'room_type'));
 
     <!-- Main Content -->
     <div class="container">
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <a href="countdown.php" class="btn btn-countdown">
+                <i class="countdown-icon">⏰</i>
+                <span>Countdown Checkout</span>
+                <small>Kamar checkout < 1 jam</small>
+            </a>
+        </div>
+
         <!-- Filters -->
         <div class="filters">
             <div class="filter-row">
