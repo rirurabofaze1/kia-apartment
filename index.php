@@ -1,7 +1,7 @@
 <?php
 require_once 'includes/config.php';
 
-// Get rooms with their current bookings
+// Get rooms with their current bookings (only the most recent active booking per room)
 $sql = "SELECT r.*, 
                b.id as booking_id,
                b.guest_name,
@@ -20,8 +20,16 @@ $sql = "SELECT r.*,
                b.extra_time_hours,
                b.extra_time_amount
         FROM rooms r 
-        LEFT JOIN bookings b ON r.id = b.room_id 
-        AND b.status IN ('booked', 'checkin', 'checkout')
+        LEFT JOIN (
+            SELECT b1.*
+            FROM bookings b1
+            INNER JOIN (
+                SELECT room_id, MAX(id) as max_id
+                FROM bookings 
+                WHERE status IN ('booked', 'checkin', 'checkout')
+                GROUP BY room_id
+            ) b2 ON b1.room_id = b2.room_id AND b1.id = b2.max_id
+        ) b ON r.id = b.room_id
         ORDER BY 
             CASE 
                 WHEN b.status = 'booked' AND b.arrival_time < NOW() THEN 1
@@ -34,11 +42,11 @@ $stmt->execute();
 $rooms = $stmt->fetchAll();
 
 // Update room statuses based on bookings
-foreach ($rooms as &$room) {
+foreach ($rooms as $key => $room) {
     if ($room['booking_id']) {
-        $room['status'] = $room['booking_status'];
+        $rooms[$key]['status'] = $room['booking_status'];
     } else {
-        $room['status'] = 'ready';
+        $rooms[$key]['status'] = 'ready';
     }
 }
 
