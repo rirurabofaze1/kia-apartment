@@ -43,6 +43,7 @@ $total_amount = $booking['price_amount'] + $booking['extra_time_amount'] - $book
     <div class="receipt">
         <div class="header">
             <h2>KIA SERVICED APARTMENT</h2>
+			<p>Ruko A1 Gedung Pink Apartment Grand Sentraland Wadas, Telukjambe Timur, Karawang, Jawa Barat 41361</p>
             <p>Receipt #<?php echo $booking['id']; ?></p>
             <p><?php echo formatDateTime($booking['created_at']); ?></p>
         </div>
