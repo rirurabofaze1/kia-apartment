@@ -279,30 +279,6 @@ $urgent_rooms = $stmt->fetchAll();
                 location.reload();
             }, 30000);
         });
-        
-        function updateCountdown(element, targetTime) {
-            const now = new Date().getTime();
-            const target = new Date(targetTime).getTime();
-            const difference = target - now;
-            
-            if (difference > 0) {
-                const hours = Math.floor(difference / (1000 * 60 * 60));
-                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-                
-                element.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                
-                // Add urgent class if less than 15 minutes
-                if (difference <= 15 * 60 * 1000) {
-                    element.classList.add('urgent');
-                } else {
-                    element.classList.remove('urgent');
-                }
-            } else {
-                element.textContent = 'EXPIRED';
-                element.classList.add('urgent');
-            }
-        }
     </script>
 </body>
 </html>

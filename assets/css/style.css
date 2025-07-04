@@ -44,6 +44,12 @@ body {
     margin: 0 auto;
 }
 
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
 .logo {
     font-size: 1.8rem;
     font-weight: bold;
@@ -65,6 +71,48 @@ body {
 .nav-toggle:hover {
     background: var(--dark-pink);
     transform: translateY(-2px);
+}
+
+/* Header Countdown Button */
+.btn-countdown-header {
+    background: linear-gradient(135deg, var(--primary-pink) 0%, var(--dark-pink) 100%);
+    color: var(--white);
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.btn-countdown-header:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255, 105, 180, 0.5);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.countdown-icon-small {
+    font-size: 1.2rem;
+    animation: pulse-small 2s infinite;
+}
+
+@keyframes pulse-small {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.btn-countdown-header span {
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
 /* Modal */
@@ -501,6 +549,22 @@ body {
 @media (max-width: 768px) {
     .header-content {
         padding: 0 1rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .header-actions {
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .btn-countdown-header {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    
+    .countdown-icon-small {
+        font-size: 1rem;
     }
     
     .container {
