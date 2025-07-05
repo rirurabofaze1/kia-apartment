@@ -91,7 +91,7 @@ try {
                       FROM bookings b
                       JOIN rooms r ON b.room_id = r.id
                       JOIN users u ON b.created_by = u.id
-                      WHERE $date_filter $search_filter";
+                      WHERE ($date_filter) $search_filter";
         
         $count_stmt = $pdo->prepare($count_sql);
         $count_stmt->execute($params);
@@ -102,7 +102,7 @@ try {
                 FROM bookings b
                 JOIN rooms r ON b.room_id = r.id
                 JOIN users u ON b.created_by = u.id
-                WHERE $date_filter $search_filter
+                WHERE ($date_filter) $search_filter
                 ORDER BY b.created_at DESC
                 LIMIT ? OFFSET ?";
         
@@ -139,7 +139,7 @@ try {
                       JOIN bookings b ON t.booking_id = b.id
                       JOIN rooms r ON b.room_id = r.id
                       JOIN users u ON t.created_by = u.id
-                      WHERE $trans_date_filter $search_filter";
+                      WHERE ($trans_date_filter) $search_filter";
         
         $count_stmt = $pdo->prepare($count_sql);
         $count_stmt->execute($trans_params);
@@ -151,7 +151,7 @@ try {
                 JOIN bookings b ON t.booking_id = b.id
                 JOIN rooms r ON b.room_id = r.id
                 JOIN users u ON t.created_by = u.id
-                WHERE $trans_date_filter $search_filter
+                WHERE ($trans_date_filter) $search_filter
                 ORDER BY t.transaction_date DESC
                 LIMIT ? OFFSET ?";
         
@@ -165,7 +165,7 @@ try {
                       FROM bookings b
                       JOIN rooms r ON b.room_id = r.id
                       JOIN users u ON b.created_by = u.id
-                      WHERE b.status IN ('cancelled', 'no_show') AND $date_filter $search_filter";
+                      WHERE b.status IN ('cancelled', 'no_show') AND ($date_filter) $search_filter";
         
         $count_stmt = $pdo->prepare($count_sql);
         $count_stmt->execute($params);
@@ -176,7 +176,7 @@ try {
                 FROM bookings b
                 JOIN rooms r ON b.room_id = r.id
                 JOIN users u ON b.created_by = u.id
-                WHERE b.status IN ('cancelled', 'no_show') AND $date_filter $search_filter
+                WHERE b.status IN ('cancelled', 'no_show') AND ($date_filter) $search_filter
                 ORDER BY b.updated_at DESC
                 LIMIT ? OFFSET ?";
         

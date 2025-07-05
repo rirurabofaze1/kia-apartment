@@ -41,9 +41,12 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute();
 $rooms = $stmt->fetchAll();
 
-// Update room statuses based on bookings
+// Update room statuses based on bookings and room status
 foreach ($rooms as $key => $room) {
-    if ($room['booking_id']) {
+    // If room status is 'ready', it overrides any booking status
+    if ($room['status'] == 'ready') {
+        $rooms[$key]['status'] = 'ready';
+    } elseif ($room['booking_id']) {
         $rooms[$key]['status'] = $room['booking_status'];
     } else {
         $rooms[$key]['status'] = 'ready';

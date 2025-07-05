@@ -829,3 +829,55 @@ body {
         font-size: 0.8rem;
     }
 }
+
+/* Status Badge Classes */
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-booked {
+    background: rgba(33, 150, 243, 0.2);
+    color: var(--info);
+    border: 1px solid var(--info);
+}
+
+.status-checkin {
+    background: rgba(76, 175, 80, 0.2);
+    color: var(--success);
+    border: 1px solid var(--success);
+}
+
+.status-checkout {
+    background: rgba(255, 152, 0, 0.2);
+    color: var(--warning);
+    border: 1px solid var(--warning);
+}
+
+.status-completed {
+    background: rgba(76, 175, 80, 0.3);
+    color: #2e7d32;
+    border: 1px solid #2e7d32;
+}
+
+.status-cancelled {
+    background: rgba(244, 67, 54, 0.2);
+    color: var(--danger);
+    border: 1px solid var(--danger);
+}
+
+.status-no-show {
+    background: rgba(158, 158, 158, 0.2);
+    color: #757575;
+    border: 1px solid #757575;
+}
+
+.status-default {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--light-gray);
+    border: 1px solid var(--light-gray);
+}

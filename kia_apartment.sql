@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 05 Jul 2025 pada 08.46
+-- Waktu pembuatan: 05 Jul 2025 pada 19.15
 -- Versi server: 10.4.22-MariaDB
 -- Versi PHP: 8.1.2
 
@@ -40,7 +40,7 @@ CREATE TABLE `bookings` (
   `deposit_type` enum('cash','id_card','no_deposit') NOT NULL,
   `deposit_amount` decimal(10,2) DEFAULT 0.00,
   `notes` text DEFAULT NULL,
-  `status` enum('booked','checkin','checkout','cancelled','no_show') DEFAULT 'booked',
+  `status` enum('booked','checkin','checkout','cancelled','no_show','completed') DEFAULT 'booked',
   `checkin_time` datetime DEFAULT NULL,
   `checkout_time` datetime DEFAULT NULL,
   `extra_time_hours` int(11) DEFAULT 0,
@@ -73,7 +73,9 @@ INSERT INTO `bookings` (`id`, `room_id`, `guest_name`, `arrival_time`, `phone_nu
 (14, 1, 'ilham', '2025-07-05 02:30:00', '12345657890', 'transit', 3, '150000.00', 'cash', 'cash', '50000.00', '', 'checkout', '2025-07-05 00:29:22', '2025-07-05 00:29:37', 0, '0.00', '0.00', NULL, 1, '2025-07-04 17:29:07', '2025-07-05 06:36:24'),
 (15, 4, 'waraas', '2025-07-05 03:58:00', '3263262362', 'fullday', 33, '15000.00', 'cash', 'id_card', '0.00', 'fhfdhfdsh', 'checkout', '2025-07-05 01:57:50', '2025-07-05 01:57:55', 0, '0.00', '0.00', NULL, 1, '2025-07-04 18:57:46', '2025-07-05 06:36:24'),
 (16, 2, 'damar', '2025-07-05 12:39:00', '0896666322', 'fullday', 24, '300000.00', 'cash', 'id_card', '0.00', 'agadgdgadg', 'checkout', '2025-07-05 10:37:35', '2025-07-05 10:38:25', 0, '0.00', '0.00', NULL, 1, '2025-07-05 03:37:25', '2025-07-05 06:36:24'),
-(17, 2, 'qwsacasc', '2025-07-05 11:57:00', '1311232121', 'transit', 2, '250000.00', 'cash', 'no_deposit', '0.00', 'sfbdfbsdzb', 'checkout', '2025-07-05 11:58:33', '2025-07-05 11:58:45', 0, '0.00', '0.00', NULL, 1, '2025-07-05 04:58:22', '2025-07-05 06:36:24');
+(17, 2, 'qwsacasc', '2025-07-05 11:57:00', '1311232121', 'transit', 2, '250000.00', 'cash', 'no_deposit', '0.00', 'sfbdfbsdzb', 'checkout', '2025-07-05 11:58:33', '2025-07-05 11:58:45', 0, '0.00', '0.00', NULL, 1, '2025-07-05 04:58:22', '2025-07-05 06:36:24'),
+(18, 8, 'klblkhlkh', '2025-07-06 00:00:00', '8328199', 'transit', 2, '120000.00', 'transfer', 'id_card', '0.00', 'cfwuegfwec', 'checkout', '2025-07-06 00:01:49', '2025-07-06 00:02:11', 0, '0.00', '0.00', NULL, 1, '2025-07-05 17:01:18', '2025-07-05 17:02:11'),
+(19, 7, 'effejj', '2025-07-06 00:10:00', '332323', 'transit', 11, '150000.00', 'cash', 'no_deposit', '0.00', 'zxcascasc', 'checkout', '2025-07-06 00:10:58', '2025-07-06 00:11:26', 0, '0.00', '0.00', NULL, 1, '2025-07-05 17:10:49', '2025-07-05 17:11:26');
 
 -- --------------------------------------------------------
 
@@ -105,7 +107,7 @@ INSERT INTO `rooms` (`id`, `location`, `floor_number`, `room_number`, `room_type
 (4, 'Building A', 2, '202', 'Deluxe', 'KIA_WiFi_202', 'kia123202', 'ready', '2025-07-02 13:34:57', '2025-07-02 13:34:57'),
 (5, 'Building B', 1, '103', 'Standard', 'KIA_WiFi_103', 'kia123103', 'ready', '2025-07-02 13:34:57', '2025-07-02 13:34:57'),
 (6, 'Building B', 2, '203', 'Suite', 'KIA_WiFi_203', 'kia123203', 'ready', '2025-07-02 13:34:57', '2025-07-02 13:34:57'),
-(7, 'Gedung B', 8, '19', 'VIP', 'aparttest', 'test123', 'ready', '2025-07-02 14:37:35', '2025-07-02 14:37:35'),
+(7, 'Gedung B', 8, '19', 'VIP', 'aparttest', 'test123', 'ready', '2025-07-02 14:37:35', '2025-07-05 17:11:32'),
 (8, 'Gedung Pink ', 12, '1205', 'Standard', 'fujisan', 'uji12000', 'ready', '2025-07-04 06:21:06', '2025-07-04 06:21:06'),
 (9, 'Gedung Pink ', 18, '1805', 'Standard', 'dawg', 'wifikasasa', 'ready', '2025-07-04 10:52:49', '2025-07-04 10:52:49');
 
@@ -191,7 +193,9 @@ INSERT INTO `transactions` (`id`, `booking_id`, `transaction_type`, `amount`, `p
 (17, 14, 'booking', '150000.00', 'cash', '2025-07-05 00:29:07', 1, NULL),
 (18, 15, 'booking', '15000.00', 'cash', '2025-07-05 01:57:46', 1, NULL),
 (19, 16, 'booking', '300000.00', 'cash', '2025-07-05 10:37:25', 1, NULL),
-(20, 17, 'booking', '250000.00', 'cash', '2025-07-05 11:58:23', 1, NULL);
+(20, 17, 'booking', '250000.00', 'cash', '2025-07-05 11:58:23', 1, NULL),
+(21, 18, 'booking', '120000.00', 'transfer', '2025-07-06 00:01:18', 1, NULL),
+(22, 19, 'booking', '150000.00', 'cash', '2025-07-06 00:10:49', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -284,7 +288,7 @@ ALTER TABLE `shift_reports`
 -- AUTO_INCREMENT untuk tabel `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`

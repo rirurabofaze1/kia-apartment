@@ -117,6 +117,10 @@ function bookRoom() {
                           payment_method, created_by) VALUES (?, 'booking', ?, ?, ?)");
     $stmt->execute([$booking_id, $price_amount, $payment_method, $_SESSION['user_id']]);
     
+    // Update room status to 'booked'
+    $stmt = $pdo->prepare("UPDATE rooms SET status = 'booked' WHERE id = ?");
+    $stmt->execute([$room_id]);
+    
     return ['success' => true, 'message' => 'Room booked successfully'];
 }
 
@@ -125,10 +129,23 @@ function checkinRoom() {
     
     $booking_id = $_POST['booking_id'] ?? 0;
     
+    // Get room_id from booking
+    $stmt = $pdo->prepare("SELECT room_id FROM bookings WHERE id = ?");
+    $stmt->execute([$booking_id]);
+    $booking = $stmt->fetch();
+    
+    if (!$booking) {
+        return ['success' => false, 'message' => 'Booking not found'];
+    }
+    
     $stmt = $pdo->prepare("UPDATE bookings SET status = 'checkin', checkin_time = NOW() WHERE id = ?");
     $stmt->execute([$booking_id]);
     
     if ($stmt->rowCount() > 0) {
+        // Update room status to 'checkin'
+        $stmt = $pdo->prepare("UPDATE rooms SET status = 'checkin' WHERE id = ?");
+        $stmt->execute([$booking['room_id']]);
+        
         return ['success' => true, 'message' => 'Check-in successful'];
     } else {
         return ['success' => false, 'message' => 'Booking not found'];
@@ -140,10 +157,23 @@ function checkoutRoom() {
     
     $booking_id = $_POST['booking_id'] ?? 0;
     
+    // Get room_id from booking
+    $stmt = $pdo->prepare("SELECT room_id FROM bookings WHERE id = ?");
+    $stmt->execute([$booking_id]);
+    $booking = $stmt->fetch();
+    
+    if (!$booking) {
+        return ['success' => false, 'message' => 'Booking not found'];
+    }
+    
     $stmt = $pdo->prepare("UPDATE bookings SET status = 'checkout', checkout_time = NOW() WHERE id = ?");
     $stmt->execute([$booking_id]);
     
     if ($stmt->rowCount() > 0) {
+        // Update room status to 'checkout'
+        $stmt = $pdo->prepare("UPDATE rooms SET status = 'checkout' WHERE id = ?");
+        $stmt->execute([$booking['room_id']]);
+        
         return ['success' => true, 'message' => 'Check-out successful'];
     } else {
         return ['success' => false, 'message' => 'Booking not found'];
@@ -242,10 +272,14 @@ function setRoomReady() {
     
     $room_id = $_POST['room_id'] ?? 0;
     
-    // Update any checkout bookings for this room to completed
-    $stmt = $pdo->prepare("UPDATE bookings SET status = 'completed' WHERE room_id = ? AND status = 'checkout'");
+    // Update the room status to 'ready' instead of trying to update booking status
+    $stmt = $pdo->prepare("UPDATE rooms SET status = 'ready' WHERE id = ?");
     $stmt->execute([$room_id]);
     
-    return ['success' => true, 'message' => 'Room set to ready status'];
+    if ($stmt->rowCount() > 0) {
+        return ['success' => true, 'message' => 'Room set to ready status'];
+    } else {
+        return ['success' => false, 'message' => 'Room not found'];
+    }
 }
 ?>

@@ -46,4 +46,38 @@ function formatDateTime($datetime) {
 function formatDate($date) {
     return date('d/m/Y', strtotime($date));
 }
+
+function getStatusBadgeClass($status) {
+    switch ($status) {
+        case 'booked':
+            return 'status-booked';
+        case 'checkin':
+            return 'status-checkin';
+        case 'checkout':
+            return 'status-checkout';
+        case 'completed':
+            return 'status-completed';
+        case 'cancelled':
+            return 'status-cancelled';
+        case 'no_show':
+            return 'status-no-show';
+        default:
+            return 'status-default';
+    }
+}
+
+function buildUrl($params = []) {
+    $current_params = $_GET;
+    $merged_params = array_merge($current_params, $params);
+    
+    // Remove empty parameters
+    $merged_params = array_filter($merged_params, function($value) {
+        return $value !== '' && $value !== null;
+    });
+    
+    $query_string = http_build_query($merged_params);
+    $base_url = strtok($_SERVER["REQUEST_URI"], '?');
+    
+    return $base_url . ($query_string ? '?' . $query_string : '');
+}
 ?>
