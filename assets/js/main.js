@@ -162,70 +162,112 @@ function bookRoom(roomId) {
 
 function createBookingModal(roomId) {
     const modal = document.createElement('div');
-    modal.className = 'modal';
+    modal.className = 'modal booking-modal';
     modal.style.display = 'block';
     
     modal.innerHTML = `
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Book Room</h2>
-            <form id="bookingForm" autocomplete="off">
-                <div class="form-group">
-                    <label for="guest_name">Guest Name:</label>
-                    <input type="text" id="guest_name" name="guest_name" class="form-control" autocomplete="off" required>
-                </div>
-                <div class="form-group">
-                    <label for="arrival_time">Arrival Time:</label>
-                    <input type="datetime-local" id="arrival_time" name="arrival_time" class="form-control" autocomplete="off" required>
-                </div>
-                <div class="form-group">
-                    <label for="phone_number">Phone Number:</label>
-                    <input type="tel" id="phone_number" name="phone_number" class="form-control" autocomplete="off" required>
-                </div>
-                <div class="form-group">
-                    <label for="duration_type">Duration Type:</label>
-                    <select id="duration_type" name="duration_type" class="form-control" autocomplete="off" required>
-                        <option value="">Select Duration Type</option>
-                        <option value="transit">Transit</option>
-                        <option value="fullday">Full Day</option>
-                    </select>
-                </div>
-                <div class="form-group" id="duration_hours_group">
-                    <label for="duration_hours">Duration (Hours):</label>
-                    <input type="number" id="duration_hours" name="duration_hours" class="form-control" min="1" autocomplete="off" required>
-                </div>
-                <div class="form-group">
-                    <label for="price_amount">Price Amount:</label>
-                    <input type="number" id="price_amount" name="price_amount" class="form-control" step="0.01" autocomplete="off" required>
-                </div>
-                <div class="form-group">
-                    <label for="payment_method">Payment Method:</label>
-                    <select id="payment_method" name="payment_method" class="form-control" autocomplete="off" required>
-                        <option value="">Select Payment Method</option>
-                        <option value="cash">Cash</option>
-                        <option value="transfer">Transfer</option>
-                        <option value="qris">QRIS</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="deposit_type">Deposit Type:</label>
-                    <select id="deposit_type" name="deposit_type" class="form-control" autocomplete="off" required>
-                        <option value="">Select Deposit Type</option>
-                        <option value="cash">Cash</option>
-                        <option value="id_card">ID Card</option>
-                        <option value="no_deposit">No Deposit</option>
-                    </select>
-                </div>
-                <div class="form-group" id="deposit_amount_group">
-                    <label for="deposit_amount">Deposit Amount:</label>
-                    <input type="number" id="deposit_amount" name="deposit_amount" class="form-control" step="0.01" autocomplete="off" required>
-                </div>
-                <div class="form-group">
-                    <label for="notes">Notes:</label>
-                    <textarea id="notes" name="notes" class="form-control" rows="3" autocomplete="off"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Book Room</button>
-            </form>
+            <div class="modal-header">
+                <h2>Book Room</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="bookingForm" autocomplete="off">
+                    <!-- Guest Information Section -->
+                    <div class="form-section">
+                        <div class="section-title">
+                            Guest Information
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="guest_name">Guest Name:</label>
+                                <input type="text" id="guest_name" name="guest_name" class="form-control" autocomplete="off" placeholder="Enter guest full name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone_number">Phone Number:</label>
+                                <input type="tel" id="phone_number" name="phone_number" class="form-control" autocomplete="off" placeholder="e.g., +62812345678" required>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Booking Details Section -->
+                    <div class="form-section">
+                        <div class="section-title">
+                            Booking Details
+                        </div>
+                        <div class="form-group">
+                            <label for="arrival_time">Arrival Time:</label>
+                            <input type="datetime-local" id="arrival_time" name="arrival_time" class="form-control" autocomplete="off" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="duration_type">Duration Type:</label>
+                                <select id="duration_type" name="duration_type" class="form-control" autocomplete="off" required>
+                                    <option value="">Select Duration Type</option>
+                                    <option value="transit">Transit</option>
+                                    <option value="fullday">Full Day</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="duration_hours_group">
+                                <label for="duration_hours">Duration (Hours):</label>
+                                <input type="number" id="duration_hours" name="duration_hours" class="form-control" min="1" autocomplete="off" placeholder="e.g., 3" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Information Section -->
+                    <div class="form-section">
+                        <div class="section-title">
+                            Payment Information
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="price_amount">Price Amount:</label>
+                                <input type="number" id="price_amount" name="price_amount" class="form-control" step="0.01" autocomplete="off" placeholder="0.00" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="payment_method">Payment Method:</label>
+                                <select id="payment_method" name="payment_method" class="form-control" autocomplete="off" required>
+                                    <option value="">Select Payment Method</option>
+                                    <option value="cash">Cash</option>
+                                    <option value="transfer">Transfer</option>
+                                    <option value="qris">QRIS</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="deposit_type">Deposit Type:</label>
+                                <select id="deposit_type" name="deposit_type" class="form-control" autocomplete="off" required>
+                                    <option value="">Select Deposit Type</option>
+                                    <option value="cash">Cash</option>
+                                    <option value="id_card">ID Card</option>
+                                    <option value="no_deposit">No Deposit</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="deposit_amount_group">
+                                <label for="deposit_amount">Deposit Amount:</label>
+                                <input type="number" id="deposit_amount" name="deposit_amount" class="form-control" step="0.01" autocomplete="off" placeholder="0.00" required>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Additional Notes Section -->
+                    <div class="form-section">
+                        <div class="section-title">
+                            Additional Notes
+                        </div>
+                        <div class="form-group">
+                            <label for="notes">Notes (Optional):</label>
+                            <textarea id="notes" name="notes" class="form-control" rows="3" autocomplete="off" placeholder="Any special requests or additional information..."></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal(this)">Cancel</button>
+                <button type="submit" form="bookingForm" class="btn btn-primary">
+					Book Room
+                </button>
+            </div>
         </div>
     `;
     
@@ -263,10 +305,10 @@ function createBookingModal(roomId) {
     
     // Handle arrival time change for fullday calculation
     modal.querySelector('#arrival_time').addEventListener('change', function() {
-        const durationType = modal.querySelector('#duration_type').value;
+        const durationTypeSelect = modal.querySelector('#duration_type');
         const durationHoursInput = modal.querySelector('#duration_hours');
         
-        if (durationType === 'fullday' && this.value) {
+        if (durationTypeSelect.value === 'fullday' && this.value) {
             const arrivalDate = new Date(this.value);
             const nextDay = new Date(arrivalDate);
             nextDay.setDate(nextDay.getDate() + 1);
@@ -299,12 +341,20 @@ function createBookingModal(roomId) {
     // Handle form submission
     modal.querySelector('#bookingForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        const formData = new FormData(this);
-        formData.append('room_id', roomId);
         
-        performAction('book_room', Object.fromEntries(formData), function(response) {
+        const formData = new FormData(this);
+        const data = {
+            room_id: roomId
+        };
+        
+        for (let [key, value] of formData.entries()) {
+            data[key] = value;
+        }
+        
+        performAction('book_room', data, function(response) {
             if (response.success) {
                 alert('Room booked successfully!');
+                modal.remove();
                 location.reload();
             } else {
                 alert('Error: ' + response.message);
@@ -312,10 +362,19 @@ function createBookingModal(roomId) {
         });
     });
     
-    // Close modal functionality
+    // Handle close button
     modal.querySelector('.close').addEventListener('click', function() {
-        closeModal(this);
+        closeModal(modal.querySelector('.close'));
     });
+    
+    // Set default arrival time to current time
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    modal.querySelector('#arrival_time').value = now.toISOString().slice(0, 16);
+    
+    // Initialize deposit amount group visibility
+    const depositAmountGroup = modal.querySelector('#deposit_amount_group');
+    depositAmountGroup.style.display = 'none';
     
     // Clear form data when modal is opened (prevent history)
     setTimeout(() => {
@@ -328,6 +387,8 @@ function createBookingModal(roomId) {
                 input.value = '';
                 input.removeAttribute('value');
             });
+            // Reset arrival time after clearing
+            modal.querySelector('#arrival_time').value = now.toISOString().slice(0, 16);
         }
     }, 100);
     

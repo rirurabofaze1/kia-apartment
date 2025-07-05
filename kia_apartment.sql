@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 05 Jul 2025 pada 04.57
+-- Waktu pembuatan: 05 Jul 2025 pada 05.44
 -- Versi server: 10.4.22-MariaDB
 -- Versi PHP: 8.1.2
 
@@ -71,7 +71,8 @@ INSERT INTO `bookings` (`id`, `room_id`, `guest_name`, `arrival_time`, `phone_nu
 (12, 1, 'speed', '2025-07-04 13:21:00', '0899927287', '', 1, '888000.00', 'cash', 'id_card', '10000.00', 'viofhhfv', '', '2025-07-04 13:18:22', '2025-07-04 14:24:31', 0, '0.00', '0.00', NULL, 1, '2025-07-04 06:18:17', '2025-07-04 18:53:08'),
 (13, 9, 'akuma', '2025-07-04 17:56:00', '1616161', '', 12, '1500000.00', 'cash', 'cash', '190000.00', 'asannadvdv', '', '2025-07-04 17:54:06', '2025-07-05 00:27:44', 0, '0.00', '0.00', NULL, 1, '2025-07-04 10:53:58', '2025-07-04 18:53:08'),
 (14, 1, 'ilham', '2025-07-05 02:30:00', '12345657890', '', 3, '150000.00', 'cash', 'cash', '50000.00', '', '', '2025-07-05 00:29:22', '2025-07-05 00:29:37', 0, '0.00', '0.00', NULL, 1, '2025-07-04 17:29:07', '2025-07-04 18:53:08'),
-(15, 4, 'waraas', '2025-07-05 03:58:00', '3263262362', 'fullday', 33, '15000.00', 'cash', 'id_card', '0.00', 'fhfdhfdsh', '', '2025-07-05 01:57:50', '2025-07-05 01:57:55', 0, '0.00', '0.00', NULL, 1, '2025-07-04 18:57:46', '2025-07-04 18:57:59');
+(15, 4, 'waraas', '2025-07-05 03:58:00', '3263262362', 'fullday', 33, '15000.00', 'cash', 'id_card', '0.00', 'fhfdhfdsh', '', '2025-07-05 01:57:50', '2025-07-05 01:57:55', 0, '0.00', '0.00', NULL, 1, '2025-07-04 18:57:46', '2025-07-04 18:57:59'),
+(16, 2, 'damar', '2025-07-05 12:39:00', '0896666322', 'fullday', 24, '300000.00', 'cash', 'id_card', '0.00', 'agadgdgadg', '', '2025-07-05 10:37:35', '2025-07-05 10:38:25', 0, '0.00', '0.00', NULL, 1, '2025-07-05 03:37:25', '2025-07-05 03:38:30');
 
 -- --------------------------------------------------------
 
@@ -170,7 +171,8 @@ INSERT INTO `transactions` (`id`, `booking_id`, `transaction_type`, `amount`, `p
 (15, 12, 'booking', '888000.00', 'cash', '2025-07-04 13:18:17', 1, NULL),
 (16, 13, 'booking', '1500000.00', 'cash', '2025-07-04 17:53:58', 1, NULL),
 (17, 14, 'booking', '150000.00', 'cash', '2025-07-05 00:29:07', 1, NULL),
-(18, 15, 'booking', '15000.00', 'cash', '2025-07-05 01:57:46', 1, NULL);
+(18, 15, 'booking', '15000.00', 'cash', '2025-07-05 01:57:46', 1, NULL),
+(19, 16, 'booking', '300000.00', 'cash', '2025-07-05 10:37:25', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -245,7 +247,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT untuk tabel `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT untuk tabel `rooms`
@@ -263,7 +265,7 @@ ALTER TABLE `shift_reports`
 -- AUTO_INCREMENT untuk tabel `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
