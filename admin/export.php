@@ -113,7 +113,7 @@ if ($export_type == "csv") {
     $filename = "kia_apartment_" . $view . "_" . date("Y-m-d_H-i-s") . ".csv";
     
     header("Content-Type: text/csv");
-    header("Content-Disposition: attachment; filename="$filename"");
+    header("Content-Disposition: attachment; filename=\"$filename\"");
     header("Cache-Control: no-cache, must-revalidate");
     header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
     
@@ -178,7 +178,7 @@ if ($export_type == "csv") {
     $filename = "kia_apartment_" . $view . "_" . date("Y-m-d_H-i-s") . ".html";
     
     header("Content-Type: text/html");
-    header("Content-Disposition: attachment; filename="$filename"");
+    header("Content-Disposition: attachment; filename=\"$filename\"");
     
     echo "<!DOCTYPE html>";
     echo "<html><head>";

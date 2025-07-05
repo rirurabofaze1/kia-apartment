@@ -164,7 +164,7 @@ try {
     }
     
     $stmt = $pdo->prepare($sql);
-    $stmt->execute(array_merge($params, [$per_page, $offset]));
+    $stmt->execute($params);
     $data = $stmt->fetchAll();
     
     // Calculate pagination
