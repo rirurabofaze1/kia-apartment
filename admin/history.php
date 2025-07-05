@@ -111,7 +111,27 @@ try {
         
     } elseif ($view == "transactions") {
         // Adjust date filter for transactions table
-        $trans_date_filter = str_replace("created_at", "t.transaction_date", $date_filter);
+        // Build separate parameters for transactions view
+        $trans_params = [];
+        $trans_date_filter = str_replace(["b.created_at", "created_at"], "t.transaction_date", $date_filter);
+        
+        // Reset params for transactions and rebuild them
+        $trans_params = [];
+        if ($start_date && $end_date) {
+            $trans_params[] = $start_date;
+            $trans_params[] = $end_date;
+        }
+        
+        // Add room filter if specified
+        if ($room_id) {
+            $trans_params[] = $room_id;
+        }
+        
+        // Add search filter parameters
+        if ($search) {
+            $search_param = "%" . $search . "%";
+            $trans_params = array_merge($trans_params, [$search_param, $search_param, $search_param, $search_param]);
+        }
         
         // Count total records
         $count_sql = "SELECT COUNT(*) as total
@@ -122,7 +142,7 @@ try {
                       WHERE $trans_date_filter $search_filter";
         
         $count_stmt = $pdo->prepare($count_sql);
-        $count_stmt->execute($params);
+        $count_stmt->execute($trans_params);
         $total_records = $count_stmt->fetch()["total"];
         
         // Get paginated data
@@ -135,8 +155,9 @@ try {
                 ORDER BY t.transaction_date DESC
                 LIMIT ? OFFSET ?";
         
-        $params[] = $per_page;
-        $params[] = $offset;
+        $trans_params[] = $per_page;
+        $trans_params[] = $offset;
+        $params = $trans_params;
         
     } elseif ($view == "cancellations") {
         // Count total records
