@@ -60,11 +60,38 @@ function bookRoom() {
     $deposit_amount = $_POST['deposit_amount'] ?? 0;
     $notes = $_POST['notes'] ?? '';
     
+    // Auto-calculate duration for fullday bookings
+    if ($duration_type === 'fullday') {
+        if (empty($duration_hours) || $duration_hours == 0) {
+            // Calculate duration until 12 PM next day
+            $arrival = new DateTime($arrival_time);
+            $checkout = clone $arrival;
+            $checkout->modify('+1 day')->setTime(12, 0, 0);
+            $interval = $arrival->diff($checkout);
+            $duration_hours = ($interval->days * 24) + $interval->h + ($interval->i > 0 ? 1 : 0);
+        }
+    }
+    
     // Validate required fields
     if (empty($guest_name) || empty($arrival_time) || empty($phone_number) || 
-        empty($duration_type) || empty($duration_hours) || empty($price_amount) || 
-        empty($payment_method) || empty($deposit_type)) {
+        empty($duration_type) || empty($price_amount) || empty($payment_method) || 
+        empty($deposit_type)) {
         return ['success' => false, 'message' => 'All required fields must be filled'];
+    }
+    
+    // Validate duration hours for transit bookings
+    if ($duration_type === 'transit' && (empty($duration_hours) || $duration_hours <= 0)) {
+        return ['success' => false, 'message' => 'Duration hours is required for transit bookings'];
+    }
+    
+    // Validate deposit amount for cash deposits
+    if ($deposit_type === 'cash' && (empty($deposit_amount) || $deposit_amount <= 0)) {
+        return ['success' => false, 'message' => 'Deposit amount is required for cash deposits'];
+    }
+    
+    // Set deposit amount to 0 for no_deposit and id_card types
+    if ($deposit_type === 'no_deposit' || $deposit_type === 'id_card') {
+        $deposit_amount = 0;
     }
     
     // Check for existing active booking

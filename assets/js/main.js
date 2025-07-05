@@ -166,104 +166,136 @@ function createBookingModal(roomId) {
     modal.style.display = 'block';
     
     modal.innerHTML = `
-        <div class="modal-content booking-modal">
+        <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Book Room</h2>
-            <div class="booking-form-container">
-                <form id="bookingForm">
-                    <!-- Guest Information Section -->
-                    <div class="form-section">
-                        <h3 class="section-title">Guest Information</h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="guest_name">Guest Name:</label>
-                                <input type="text" id="guest_name" name="guest_name" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="phone_number">Phone Number:</label>
-                                <input type="tel" id="phone_number" name="phone_number" class="form-control" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Booking Details Section -->
-                    <div class="form-section">
-                        <h3 class="section-title">Booking Details</h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="arrival_time">Arrival Time:</label>
-                                <input type="datetime-local" id="arrival_time" name="arrival_time" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="duration_type">Duration Type:</label>
-                                <select id="duration_type" name="duration_type" class="form-control" required>
-                                    <option value="hourly">Hourly</option>
-                                    <option value="daily">Daily</option>
-                                    <option value="weekly">Weekly</option>
-                                    <option value="monthly">Monthly</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="duration_hours">Duration (Hours):</label>
-                                <input type="number" id="duration_hours" name="duration_hours" class="form-control" min="1" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="price_amount">Price Amount:</label>
-                                <input type="number" id="price_amount" name="price_amount" class="form-control" step="0.01" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Payment Information Section -->
-                    <div class="form-section">
-                        <h3 class="section-title">Payment Information</h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="payment_method">Payment Method:</label>
-                                <select id="payment_method" name="payment_method" class="form-control" required>
-                                    <option value="cash">Cash</option>
-                                    <option value="transfer">Transfer</option>
-                                    <option value="card">Card</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="deposit_type">Deposit Type:</label>
-                                <select id="deposit_type" name="deposit_type" class="form-control" required>
-                                    <option value="none">No Deposit</option>
-                                    <option value="cash">Cash Deposit</option>
-                                    <option value="id_card">ID Card</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="deposit_amount">Deposit Amount:</label>
-                                <input type="number" id="deposit_amount" name="deposit_amount" class="form-control" step="0.01">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Additional Notes Section -->
-                    <div class="form-section">
-                        <h3 class="section-title">Additional Notes</h3>
-                        <div class="form-group">
-                            <label for="notes">Notes:</label>
-                            <textarea id="notes" name="notes" class="form-control" rows="3" placeholder="Any special requests or notes..."></textarea>
-                        </div>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">Book Room</button>
-                        <button type="button" class="btn btn-danger" onclick="closeModal(this)">Cancel</button>
-                    </div>
-                </form>
-            </div>
+            <form id="bookingForm" autocomplete="off">
+                <div class="form-group">
+                    <label for="guest_name">Guest Name:</label>
+                    <input type="text" id="guest_name" name="guest_name" class="form-control" autocomplete="off" required>
+                </div>
+                <div class="form-group">
+                    <label for="arrival_time">Arrival Time:</label>
+                    <input type="datetime-local" id="arrival_time" name="arrival_time" class="form-control" autocomplete="off" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone_number">Phone Number:</label>
+                    <input type="tel" id="phone_number" name="phone_number" class="form-control" autocomplete="off" required>
+                </div>
+                <div class="form-group">
+                    <label for="duration_type">Duration Type:</label>
+                    <select id="duration_type" name="duration_type" class="form-control" autocomplete="off" required>
+                        <option value="">Select Duration Type</option>
+                        <option value="transit">Transit</option>
+                        <option value="fullday">Full Day</option>
+                    </select>
+                </div>
+                <div class="form-group" id="duration_hours_group">
+                    <label for="duration_hours">Duration (Hours):</label>
+                    <input type="number" id="duration_hours" name="duration_hours" class="form-control" min="1" autocomplete="off" required>
+                </div>
+                <div class="form-group">
+                    <label for="price_amount">Price Amount:</label>
+                    <input type="number" id="price_amount" name="price_amount" class="form-control" step="0.01" autocomplete="off" required>
+                </div>
+                <div class="form-group">
+                    <label for="payment_method">Payment Method:</label>
+                    <select id="payment_method" name="payment_method" class="form-control" autocomplete="off" required>
+                        <option value="">Select Payment Method</option>
+                        <option value="cash">Cash</option>
+                        <option value="transfer">Transfer</option>
+                        <option value="qris">QRIS</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="deposit_type">Deposit Type:</label>
+                    <select id="deposit_type" name="deposit_type" class="form-control" autocomplete="off" required>
+                        <option value="">Select Deposit Type</option>
+                        <option value="cash">Cash</option>
+                        <option value="id_card">ID Card</option>
+                        <option value="no_deposit">No Deposit</option>
+                    </select>
+                </div>
+                <div class="form-group" id="deposit_amount_group">
+                    <label for="deposit_amount">Deposit Amount:</label>
+                    <input type="number" id="deposit_amount" name="deposit_amount" class="form-control" step="0.01" autocomplete="off" required>
+                </div>
+                <div class="form-group">
+                    <label for="notes">Notes:</label>
+                    <textarea id="notes" name="notes" class="form-control" rows="3" autocomplete="off"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Book Room</button>
+            </form>
         </div>
     `;
     
+    // Handle duration type change
+    modal.querySelector('#duration_type').addEventListener('change', function() {
+        const durationHoursGroup = modal.querySelector('#duration_hours_group');
+        const durationHoursInput = modal.querySelector('#duration_hours');
+        const arrivalTimeInput = modal.querySelector('#arrival_time');
+        
+        if (this.value === 'fullday') {
+            // Hide duration hours input for fullday
+            durationHoursGroup.style.display = 'none';
+            durationHoursInput.removeAttribute('required');
+            
+            // Auto-calculate duration until 12 PM next day
+            if (arrivalTimeInput.value) {
+                const arrivalDate = new Date(arrivalTimeInput.value);
+                const nextDay = new Date(arrivalDate);
+                nextDay.setDate(nextDay.getDate() + 1);
+                nextDay.setHours(12, 0, 0, 0); // Set to 12:00 PM
+                
+                const durationMs = nextDay.getTime() - arrivalDate.getTime();
+                const durationHours = Math.ceil(durationMs / (1000 * 60 * 60));
+                durationHoursInput.value = durationHours;
+            } else {
+                durationHoursInput.value = 12; // Default 12 hours
+            }
+        } else {
+            // Show duration hours input for transit
+            durationHoursGroup.style.display = 'block';
+            durationHoursInput.setAttribute('required', 'required');
+            durationHoursInput.value = '';
+        }
+    });
+    
+    // Handle arrival time change for fullday calculation
+    modal.querySelector('#arrival_time').addEventListener('change', function() {
+        const durationType = modal.querySelector('#duration_type').value;
+        const durationHoursInput = modal.querySelector('#duration_hours');
+        
+        if (durationType === 'fullday' && this.value) {
+            const arrivalDate = new Date(this.value);
+            const nextDay = new Date(arrivalDate);
+            nextDay.setDate(nextDay.getDate() + 1);
+            nextDay.setHours(12, 0, 0, 0); // Set to 12:00 PM
+            
+            const durationMs = nextDay.getTime() - arrivalDate.getTime();
+            const durationHours = Math.ceil(durationMs / (1000 * 60 * 60));
+            durationHoursInput.value = durationHours;
+        }
+    });
+    
+    // Handle deposit type change
+    modal.querySelector('#deposit_type').addEventListener('change', function() {
+        const depositAmountGroup = modal.querySelector('#deposit_amount_group');
+        const depositAmountInput = modal.querySelector('#deposit_amount');
+        
+        if (this.value === 'no_deposit' || this.value === 'id_card') {
+            // Hide deposit amount input
+            depositAmountGroup.style.display = 'none';
+            depositAmountInput.removeAttribute('required');
+            depositAmountInput.value = '0';
+        } else {
+            // Show deposit amount input for cash
+            depositAmountGroup.style.display = 'block';
+            depositAmountInput.setAttribute('required', 'required');
+            depositAmountInput.value = '';
+        }
+    });
+
     // Handle form submission
     modal.querySelector('#bookingForm').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -285,11 +317,35 @@ function createBookingModal(roomId) {
         closeModal(this);
     });
     
+    // Clear form data when modal is opened (prevent history)
+    setTimeout(() => {
+        const form = modal.querySelector('#bookingForm');
+        if (form) {
+            form.reset();
+            // Clear all input values explicitly
+            const inputs = form.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.value = '';
+                input.removeAttribute('value');
+            });
+        }
+    }, 100);
+    
     return modal;
 }
 
 function closeModal(element) {
     const modal = element.closest('.modal');
+    // Clear form data before closing
+    const form = modal.querySelector('form');
+    if (form) {
+        form.reset();
+        const inputs = form.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.value = '';
+            input.removeAttribute('value');
+        });
+    }
     modal.remove();
 }
 
