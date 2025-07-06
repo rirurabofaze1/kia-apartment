@@ -1,41 +1,84 @@
 <?php
 require_once 'includes/config.php';
 
-// Get rooms with their current bookings (only the most recent active booking per room)
-$sql = "SELECT r.*, 
-               b.id as booking_id,
-               b.guest_name,
-               b.arrival_time,
-               b.phone_number,
-               b.duration_type,
-               b.duration_hours,
-               b.price_amount,
-               b.payment_method,
-               b.deposit_type,
-               b.deposit_amount,
-               b.notes,
-               b.status as booking_status,
-               b.checkin_time,
-               b.checkout_time,
-               b.extra_time_hours,
-               b.extra_time_amount
-        FROM rooms r 
-        LEFT JOIN (
-            SELECT b1.*
-            FROM bookings b1
-            INNER JOIN (
-                SELECT room_id, MAX(id) as max_id
-                FROM bookings 
-                WHERE status IN ('booked', 'checkin', 'checkout')
-                GROUP BY room_id
-            ) b2 ON b1.room_id = b2.room_id AND b1.id = b2.max_id
-        ) b ON r.id = b.room_id
-        ORDER BY 
-            CASE 
-                WHEN b.status = 'booked' AND b.arrival_time < NOW() THEN 1
-                ELSE 2
-            END,
-            r.location, r.floor_number, r.room_number";
+// Get rooms with their current bookings
+// For public view: only show active bookings (booked, checkin)
+// For logged-in users: show all recent bookings including checkout for management
+$isLoggedIn = isLoggedIn();
+
+if ($isLoggedIn) {
+    // Admin view: show all recent bookings including checkout
+    $sql = "SELECT r.*, 
+                   b.id as booking_id,
+                   b.guest_name,
+                   b.arrival_time,
+                   b.phone_number,
+                   b.duration_type,
+                   b.duration_hours,
+                   b.price_amount,
+                   b.payment_method,
+                   b.deposit_type,
+                   b.deposit_amount,
+                   b.notes,
+                   b.status as booking_status,
+                   b.checkin_time,
+                   b.checkout_time,
+                   b.extra_time_hours,
+                   b.extra_time_amount
+            FROM rooms r 
+            LEFT JOIN (
+                SELECT b1.*
+                FROM bookings b1
+                INNER JOIN (
+                    SELECT room_id, MAX(id) as max_id
+                    FROM bookings 
+                    WHERE status IN ('booked', 'checkin', 'checkout')
+                    GROUP BY room_id
+                ) b2 ON b1.room_id = b2.room_id AND b1.id = b2.max_id
+            ) b ON r.id = b.room_id
+            ORDER BY 
+                CASE 
+                    WHEN b.status = 'booked' AND b.arrival_time < NOW() THEN 1
+                    ELSE 2
+                END,
+                r.location, r.floor_number, r.room_number";
+} else {
+    // Public view: only show active bookings (booked, checkin) - hide customer info for checkout/ready rooms
+    $sql = "SELECT r.*, 
+                   b.id as booking_id,
+                   b.guest_name,
+                   b.arrival_time,
+                   b.phone_number,
+                   b.duration_type,
+                   b.duration_hours,
+                   b.price_amount,
+                   b.payment_method,
+                   b.deposit_type,
+                   b.deposit_amount,
+                   b.notes,
+                   b.status as booking_status,
+                   b.checkin_time,
+                   b.checkout_time,
+                   b.extra_time_hours,
+                   b.extra_time_amount
+            FROM rooms r 
+            LEFT JOIN (
+                SELECT b1.*
+                FROM bookings b1
+                INNER JOIN (
+                    SELECT room_id, MAX(id) as max_id
+                    FROM bookings 
+                    WHERE status IN ('booked', 'checkin')
+                    GROUP BY room_id
+                ) b2 ON b1.room_id = b2.room_id AND b1.id = b2.max_id
+            ) b ON r.id = b.room_id
+            ORDER BY 
+                CASE 
+                    WHEN b.status = 'booked' AND b.arrival_time < NOW() THEN 1
+                    ELSE 2
+                END,
+                r.location, r.floor_number, r.room_number";
+}
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute();
@@ -43,9 +86,26 @@ $rooms = $stmt->fetchAll();
 
 // Update room statuses based on bookings and room status
 foreach ($rooms as $key => $room) {
-    // If room status is 'ready', it overrides any booking status
+    // If room status is 'ready', it overrides any booking status and clears booking info
     if ($room['status'] == 'ready') {
         $rooms[$key]['status'] = 'ready';
+        // Clear booking information for ready rooms to protect customer privacy
+        $rooms[$key]['booking_id'] = null;
+        $rooms[$key]['guest_name'] = null;
+        $rooms[$key]['arrival_time'] = null;
+        $rooms[$key]['phone_number'] = null;
+        $rooms[$key]['duration_type'] = null;
+        $rooms[$key]['duration_hours'] = null;
+        $rooms[$key]['price_amount'] = null;
+        $rooms[$key]['payment_method'] = null;
+        $rooms[$key]['deposit_type'] = null;
+        $rooms[$key]['deposit_amount'] = null;
+        $rooms[$key]['notes'] = null;
+        $rooms[$key]['booking_status'] = null;
+        $rooms[$key]['checkin_time'] = null;
+        $rooms[$key]['checkout_time'] = null;
+        $rooms[$key]['extra_time_hours'] = null;
+        $rooms[$key]['extra_time_amount'] = null;
     } elseif ($room['booking_id']) {
         $rooms[$key]['status'] = $room['booking_status'];
     } else {

@@ -272,14 +272,28 @@ function setRoomReady() {
     
     $room_id = $_POST['room_id'] ?? 0;
     
-    // Update the room status to 'ready' instead of trying to update booking status
-    $stmt = $pdo->prepare("UPDATE rooms SET status = 'ready' WHERE id = ?");
-    $stmt->execute([$room_id]);
+    // Start transaction to ensure data consistency
+    $pdo->beginTransaction();
     
-    if ($stmt->rowCount() > 0) {
-        return ['success' => true, 'message' => 'Room set to ready status'];
-    } else {
-        return ['success' => false, 'message' => 'Room not found'];
+    try {
+        // Update the room status to 'ready'
+        $stmt = $pdo->prepare("UPDATE rooms SET status = 'ready' WHERE id = ?");
+        $stmt->execute([$room_id]);
+        
+        if ($stmt->rowCount() > 0) {
+            // Also mark any checkout bookings for this room as completed to clear customer info
+            $stmt = $pdo->prepare("UPDATE bookings SET status = 'completed' WHERE room_id = ? AND status = 'checkout'");
+            $stmt->execute([$room_id]);
+            
+            $pdo->commit();
+            return ['success' => true, 'message' => 'Room set to ready status'];
+        } else {
+            $pdo->rollback();
+            return ['success' => false, 'message' => 'Room not found'];
+        }
+    } catch (Exception $e) {
+        $pdo->rollback();
+        return ['success' => false, 'message' => 'Error setting room ready: ' . $e->getMessage()];
     }
 }
 ?>
