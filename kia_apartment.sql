@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 07, 2025 at 09:01 AM
+-- Generation Time: Jul 07, 2025 at 11:13 AM
 -- Server version: 10.1.36-MariaDB
 -- PHP Version: 7.2.11
 
@@ -79,7 +79,8 @@ INSERT INTO `bookings` (`id`, `room_id`, `guest_name`, `arrival_time`, `phone_nu
 (19, 7, 'effejj', '2025-07-06 00:10:00', '332323', 'transit', 11, '150000.00', 'cash', 'no_deposit', '0.00', 'zxcascasc', 'checkout', '2025-07-06 00:10:58', '2025-07-06 00:11:26', 0, '0.00', '0.00', NULL, 1, '2025-07-05 17:10:49', '2025-07-05 17:11:26'),
 (20, 2, 'dama', '2025-07-07 11:02:00', '2125413651', 'transit', 1, '100000.00', 'cash', 'no_deposit', '0.00', 'sqadcqsawdqw', 'completed', '2025-07-07 10:59:03', '2025-07-07 10:59:23', 0, '0.00', '0.00', NULL, 1, '2025-07-07 03:58:57', '2025-07-07 03:59:28'),
 (21, 3, 'albi', '2025-07-07 13:59:00', '1256671', 'fullday', 23, '300000.00', 'qris', 'no_deposit', '0.00', '', 'completed', '2025-07-07 13:56:02', '2025-07-07 13:56:34', 0, '0.00', '0.00', NULL, 1, '2025-07-07 06:55:57', '2025-07-07 06:56:37'),
-(22, 10, 'nnnn', '2025-07-07 14:00:00', '784544', 'transit', 1, '50000.00', 'cash', 'cash', '10000.00', 'cwcvaqcvawqs', 'completed', '2025-07-07 13:59:21', '2025-07-07 13:59:26', 0, '0.00', '0.00', NULL, 1, '2025-07-07 06:59:16', '2025-07-07 06:59:29');
+(22, 10, 'nnnn', '2025-07-07 14:00:00', '784544', 'transit', 1, '50000.00', 'cash', 'cash', '10000.00', 'cwcvaqcvawqs', 'completed', '2025-07-07 13:59:21', '2025-07-07 13:59:26', 0, '0.00', '0.00', NULL, 1, '2025-07-07 06:59:16', '2025-07-07 06:59:29'),
+(23, 2, 'nami', '2025-07-07 15:45:00', '12434123', 'transit', 1, '100000.00', 'transfer', 'no_deposit', '0.00', '12e1dsd', 'completed', '2025-07-07 15:41:22', '2025-07-07 15:41:32', 0, '0.00', '0.00', NULL, 3, '2025-07-07 08:41:17', '2025-07-07 08:41:35');
 
 -- --------------------------------------------------------
 
@@ -106,7 +107,7 @@ CREATE TABLE `rooms` (
 
 INSERT INTO `rooms` (`id`, `location`, `floor_number`, `room_number`, `room_type`, `wifi_name`, `wifi_password`, `status`, `created_at`, `updated_at`) VALUES
 (1, 'Building A', 2, '205', 'Deluxe', 'Test-Wifi', 'wifiku123', 'ready', '2025-07-02 13:34:57', '2025-07-03 10:39:29'),
-(2, 'Building A', 1, '102', 'Standard', 'KIA_WiFi_102', 'kia123102', 'ready', '2025-07-02 13:34:57', '2025-07-07 03:59:28'),
+(2, 'Building A', 1, '102', 'Standard', 'KIA_WiFi_102', 'kia123102', 'ready', '2025-07-02 13:34:57', '2025-07-07 08:41:35'),
 (3, 'Building A', 2, '201', 'Deluxe', 'KIA_WiFi_201', 'kia123201', 'ready', '2025-07-02 13:34:57', '2025-07-07 06:56:37'),
 (4, 'Building A', 2, '202', 'Deluxe', 'KIA_WiFi_202', 'kia123202', 'ready', '2025-07-02 13:34:57', '2025-07-02 13:34:57'),
 (5, 'Building B', 1, '103', 'Standard', 'KIA_WiFi_103', 'kia123103', 'ready', '2025-07-02 13:34:57', '2025-07-02 13:34:57'),
@@ -155,7 +156,9 @@ INSERT INTO `shift_reports` (`id`, `user_id`, `shift_date`, `total_transactions`
 (16, 1, '2025-07-05', 4, '715000.00', 'xz xz zx', '2025-07-05 05:44:42'),
 (17, 1, '2025-07-05', 4, '715000.00', 'xz xz zx', '2025-07-05 05:45:13'),
 (18, 1, '2025-07-05', 4, '715000.00', 'xz xz zx', '2025-07-05 05:45:44'),
-(19, 1, '2025-07-05', 4, '715000.00', 'xz xz zx', '2025-07-05 05:46:15');
+(19, 1, '2025-07-05', 4, '715000.00', 'xz xz zx', '2025-07-05 05:46:15'),
+(20, 1, '2025-07-07', 3, '450000.00', 'test', '2025-07-07 07:04:21'),
+(21, 1, '2025-07-07', 3, '450000.00', 'test', '2025-07-07 07:04:51');
 
 -- --------------------------------------------------------
 
@@ -203,7 +206,8 @@ INSERT INTO `transactions` (`id`, `booking_id`, `transaction_type`, `amount`, `p
 (22, 19, 'booking', '150000.00', 'cash', '2025-07-06 00:10:49', 1, NULL),
 (23, 20, 'booking', '100000.00', 'cash', '2025-07-07 10:58:57', 1, NULL),
 (24, 21, 'booking', '300000.00', 'qris', '2025-07-07 13:55:57', 1, NULL),
-(25, 22, 'booking', '50000.00', 'cash', '2025-07-07 13:59:16', 1, NULL);
+(25, 22, 'booking', '50000.00', 'cash', '2025-07-07 13:59:16', 1, NULL),
+(26, 23, 'booking', '100000.00', 'transfer', '2025-07-07 15:41:17', 3, NULL);
 
 -- --------------------------------------------------------
 
@@ -226,9 +230,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `full_name`, `role`, `created_at`, `updated_at`) VALUES
-(1, 'superuser', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Super User', 'superuser', '2025-07-02 13:34:56', '2025-07-02 13:34:56'),
+(1, 'superuser', '$2y$10$J7gL8Uoq0wcSXNAJG19NLO0Ft86S95GnSpd91NXy1eM6Ap7zAhDL6', 'Super User', 'superuser', '2025-07-02 13:34:56', '2025-07-07 09:00:28'),
 (2, 'admin', '$2y$10$C1pnZTcjw8RLW8OSIHhmWOgD/G5KmyB/X9ZBmhis1GV.CeZDgCfCe', 'kia', 'admin', '2025-07-02 13:45:05', '2025-07-02 13:45:05'),
-(3, 'kasir', '$2y$10$VAig3xjG3f7fEUfKdMoXNOS9VJiQuZs5OPIHnN9SAAau2DK6gWwn2', 'kasirtest', 'cashier', '2025-07-02 15:10:31', '2025-07-02 15:10:31');
+(3, 'jotaro', '$2y$10$W9hrM3.ixHuLIgrosKYC0.cFCZG/1BjbTJGfgbnaIpQG6WqNUfbZi', 'kasirtest', 'cashier', '2025-07-02 15:10:31', '2025-07-07 08:39:48');
 
 --
 -- Indexes for dumped tables
@@ -278,7 +282,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `rooms`
@@ -290,13 +294,13 @@ ALTER TABLE `rooms`
 -- AUTO_INCREMENT for table `shift_reports`
 --
 ALTER TABLE `shift_reports`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `users`
