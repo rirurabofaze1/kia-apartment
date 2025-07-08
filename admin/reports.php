@@ -13,6 +13,12 @@ $custom_end = $_GET["end_date"] ?? "";
 // Build date filter based on period
 $date_filter = "";
 $params = [];
+// Recent bookings
+$stmt = $pdo->prepare("SELECT b.*, r.room_number, r.location FROM bookings b 
+                      JOIN rooms r ON b.room_id = r.id 
+                      ORDER BY b.created_at DESC LIMIT 10");
+$stmt->execute();
+$recent_bookings = $stmt->fetchAll();
 
 switch ($period) {
     case "today":
@@ -298,8 +304,42 @@ $transactions = $stmt->fetchAll();
                 </tbody>
             </table>
         </div>
-    </div>
-
+    
+		<div class="table-container">
+			<h2 style="color: var(--primary-pink); margin: 1rem;">Reprint From Bookings</h2>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Tanggal</th>
+						<th>Nama Customer</th>
+						<th>Nominal</th>
+						<th>Status</th>
+					<!-- Tambahkan kolom untuk reprint -->
+					<th>Reprint</th>
+					</tr>
+				</thead>
+			<tbody>
+				<?php foreach($recent_bookings as $trx): ?>
+				<tr>
+					<td><?= htmlspecialchars($trx['id']) ?></td>
+					<td><?= htmlspecialchars($trx['created_at']) ?></td>
+					<td><?= htmlspecialchars($trx['guest_name']) ?></td>
+					<td><?= htmlspecialchars($trx['price_amount']) ?></td>
+					<td><?= htmlspecialchars($trx['status']) ?></td>
+					<!-- Tombol reprint -->
+					<td>
+						<a href="../includes/print_receipt.php?booking_id=<?= urlencode($trx['id']) ?>" 
+						class="btn btn-secondary" target="_blank" title="Cetak ulang struk">
+						🖨️ Reprint
+						</a>
+					</td>
+				</tr>
+				<?php endforeach; ?>
+			</tbody>
+			</table>
+		</div>
+	</div>
     <footer class="footer">
         <p>&copy; 2024 KIA SERVICED APARTMENT - Copyright by Riruuu Rabofezu</p>
     </footer>

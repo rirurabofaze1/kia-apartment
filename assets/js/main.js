@@ -272,53 +272,69 @@ function createBookingModal(roomId) {
     `;
     
     // Handle duration type change
-    modal.querySelector('#duration_type').addEventListener('change', function() {
-        const durationHoursGroup = modal.querySelector('#duration_hours_group');
-        const durationHoursInput = modal.querySelector('#duration_hours');
-        const arrivalTimeInput = modal.querySelector('#arrival_time');
-        
-        if (this.value === 'fullday') {
-            // Hide duration hours input for fullday
-            durationHoursGroup.style.display = 'none';
-            durationHoursInput.removeAttribute('required');
-            
-            // Auto-calculate duration until 12 PM next day
-            if (arrivalTimeInput.value) {
-                const arrivalDate = new Date(arrivalTimeInput.value);
-                const nextDay = new Date(arrivalDate);
-                nextDay.setDate(nextDay.getDate() + 1);
-                nextDay.setHours(12, 0, 0, 0); // Set to 12:00 PM
-                
-                const durationMs = nextDay.getTime() - arrivalDate.getTime();
-                const durationHours = Math.ceil(durationMs / (1000 * 60 * 60));
-                durationHoursInput.value = durationHours;
+modal.querySelector('#duration_type').addEventListener('change', function() {
+    const durationHoursGroup = modal.querySelector('#duration_hours_group');
+    const durationHoursInput = modal.querySelector('#duration_hours');
+    const arrivalTimeInput = modal.querySelector('#arrival_time');
+
+    if (this.value === 'fullday') {
+        // Hide duration hours input for fullday
+        durationHoursGroup.style.display = 'none';
+        durationHoursInput.removeAttribute('required');
+
+        // Penentuan checkout khusus fullday:
+        // - Jika checkin >= 12:00, checkout jam 12:00 besok
+        // - Jika checkin < 12:00, checkout jam 12:00 hari itu juga
+        if (arrivalTimeInput.value) {
+            const arrivalDate = new Date(arrivalTimeInput.value);
+            const arrivalHour = arrivalDate.getHours();
+
+            let checkoutDate = new Date(arrivalDate);
+            if (arrivalHour >= 12) {
+                // checkout jam 12:00 besok
+                checkoutDate.setDate(checkoutDate.getDate() + 1);
+                checkoutDate.setHours(12, 0, 0, 0);
             } else {
-                durationHoursInput.value = 12; // Default 12 hours
+                // checkout jam 12:00 hari itu juga
+                checkoutDate.setHours(12, 0, 0, 0);
             }
-        } else {
-            // Show duration hours input for transit
-            durationHoursGroup.style.display = 'block';
-            durationHoursInput.setAttribute('required', 'required');
-            durationHoursInput.value = '';
-        }
-    });
-    
-    // Handle arrival time change for fullday calculation
-    modal.querySelector('#arrival_time').addEventListener('change', function() {
-        const durationTypeSelect = modal.querySelector('#duration_type');
-        const durationHoursInput = modal.querySelector('#duration_hours');
-        
-        if (durationTypeSelect.value === 'fullday' && this.value) {
-            const arrivalDate = new Date(this.value);
-            const nextDay = new Date(arrivalDate);
-            nextDay.setDate(nextDay.getDate() + 1);
-            nextDay.setHours(12, 0, 0, 0); // Set to 12:00 PM
-            
-            const durationMs = nextDay.getTime() - arrivalDate.getTime();
+            const durationMs = checkoutDate.getTime() - arrivalDate.getTime();
             const durationHours = Math.ceil(durationMs / (1000 * 60 * 60));
             durationHoursInput.value = durationHours;
+        } else {
+            durationHoursInput.value = 12; // Default 12 hours
         }
-    });
+		} else {
+        // Show duration hours input for transit
+        durationHoursGroup.style.display = 'block';
+        durationHoursInput.setAttribute('required', 'required');
+        durationHoursInput.value = '';
+		}
+	});
+
+// Handle arrival time change for fullday calculation
+modal.querySelector('#arrival_time').addEventListener('change', function() {
+    const durationTypeSelect = modal.querySelector('#duration_type');
+    const durationHoursInput = modal.querySelector('#duration_hours');
+
+    if (durationTypeSelect.value === 'fullday' && this.value) {
+        const arrivalDate = new Date(this.value);
+        const arrivalHour = arrivalDate.getHours();
+
+        let checkoutDate = new Date(arrivalDate);
+        if (arrivalHour >= 12) {
+            // checkout jam 12:00 besok
+            checkoutDate.setDate(checkoutDate.getDate() + 1);
+            checkoutDate.setHours(12, 0, 0, 0);
+        } else {
+            // checkout jam 12:00 hari itu juga
+            checkoutDate.setHours(12, 0, 0, 0);
+        }
+        const durationMs = checkoutDate.getTime() - arrivalDate.getTime();
+        const durationHours = Math.ceil(durationMs / (1000 * 60 * 60));
+        durationHoursInput.value = durationHours;
+		}
+	});
     
     // Handle deposit type change
     modal.querySelector('#deposit_type').addEventListener('change', function() {

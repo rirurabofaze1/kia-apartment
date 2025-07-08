@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 08, 2025 at 11:05 AM
+-- Generation Time: Jul 08, 2025 at 12:58 PM
 -- Server version: 10.1.36-MariaDB
 -- PHP Version: 7.2.11
 
@@ -82,7 +82,9 @@ INSERT INTO `bookings` (`id`, `room_id`, `guest_name`, `arrival_time`, `phone_nu
 (22, 10, 'nnnn', '2025-07-07 14:00:00', '784544', 'transit', 1, '50000.00', 'cash', 'cash', '10000.00', 'cwcvaqcvawqs', 'completed', '2025-07-07 13:59:21', '2025-07-07 13:59:26', 0, '0.00', '0.00', NULL, 1, '2025-07-07 06:59:16', '2025-07-07 06:59:29'),
 (23, 2, 'nami', '2025-07-07 15:45:00', '12434123', 'transit', 1, '100000.00', 'transfer', 'no_deposit', '0.00', '12e1dsd', 'completed', '2025-07-07 15:41:22', '2025-07-07 15:41:32', 0, '0.00', '0.00', NULL, 3, '2025-07-07 08:41:17', '2025-07-07 08:41:35'),
 (24, 3, 'jojo', '2025-07-07 22:44:00', '0856439137974', 'transit', 1, '150000.00', 'qris', 'no_deposit', '0.00', 'test', 'completed', '2025-07-07 21:44:38', '2025-07-07 21:44:46', 0, '0.00', '0.00', NULL, 1, '2025-07-07 14:44:32', '2025-07-07 14:44:50'),
-(25, 2, 'bash', '2025-07-08 16:09:00', '12332623562', 'transit', 1, '125000.00', 'cash', 'id_card', '0.00', 'hgfdsghdssdghd', 'completed', '2025-07-08 16:03:06', '2025-07-08 16:03:18', 0, '0.00', '0.00', NULL, 1, '2025-07-08 09:02:58', '2025-07-08 09:03:21');
+(25, 2, 'bash', '2025-07-08 16:09:00', '12332623562', 'transit', 1, '125000.00', 'cash', 'id_card', '0.00', 'hgfdsghdssdghd', 'completed', '2025-07-08 16:03:06', '2025-07-08 16:03:18', 0, '0.00', '0.00', NULL, 1, '2025-07-08 09:02:58', '2025-07-08 09:03:21'),
+(26, 2, 'jona', '2025-07-08 16:24:00', '325632652', 'fullday', 20, '400000.00', 'cash', 'id_card', '0.00', 'dfvdswfwf', 'completed', '2025-07-08 16:22:39', '2025-07-08 16:22:57', 0, '0.00', '0.00', NULL, 1, '2025-07-08 09:22:35', '2025-07-08 09:23:05'),
+(27, 2, 'asfsfafsa', '2025-07-08 17:30:00', '123414321', 'transit', 1, '100000.00', 'cash', 'id_card', '0.00', 'efwef1er1', 'checkin', '2025-07-08 17:29:21', NULL, 0, '0.00', '0.00', NULL, 3, '2025-07-08 10:29:16', '2025-07-08 10:29:21');
 
 -- --------------------------------------------------------
 
@@ -109,7 +111,7 @@ CREATE TABLE `rooms` (
 
 INSERT INTO `rooms` (`id`, `location`, `floor_number`, `room_number`, `room_type`, `wifi_name`, `wifi_password`, `status`, `created_at`, `updated_at`) VALUES
 (1, 'Building A', 2, '205', 'Deluxe', 'Test-Wifi', 'wifiku123', 'ready', '2025-07-02 13:34:57', '2025-07-03 10:39:29'),
-(2, 'Building A', 1, '102', 'Standard', 'KIA_WiFi_102', 'kia123102', 'ready', '2025-07-02 13:34:57', '2025-07-08 09:03:21'),
+(2, 'Building A', 1, '102', 'Standard', 'KIA_WiFi_102', 'kia123102', 'checkin', '2025-07-02 13:34:57', '2025-07-08 10:29:21'),
 (3, 'Building A', 2, '201', 'Deluxe', 'KIA_WiFi_201', 'kia123201', 'ready', '2025-07-02 13:34:57', '2025-07-07 14:44:50'),
 (4, 'Building A', 2, '202', 'Deluxe', 'KIA_WiFi_202', 'kia123202', 'ready', '2025-07-02 13:34:57', '2025-07-02 13:34:57'),
 (5, 'Building B', 1, '103', 'Standard', 'KIA_WiFi_103', 'kia123103', 'ready', '2025-07-02 13:34:57', '2025-07-02 13:34:57'),
@@ -211,7 +213,9 @@ INSERT INTO `transactions` (`id`, `booking_id`, `transaction_type`, `amount`, `p
 (25, 22, 'booking', '50000.00', 'cash', '2025-07-07 13:59:16', 1, NULL),
 (26, 23, 'booking', '100000.00', 'transfer', '2025-07-07 15:41:17', 3, NULL),
 (27, 24, 'booking', '150000.00', 'qris', '2025-07-07 21:44:32', 1, NULL),
-(28, 25, 'booking', '125000.00', 'cash', '2025-07-08 16:02:58', 1, NULL);
+(28, 25, 'booking', '125000.00', 'cash', '2025-07-08 16:02:58', 1, NULL),
+(29, 26, 'booking', '400000.00', 'cash', '2025-07-08 16:22:35', 1, NULL),
+(30, 27, 'booking', '100000.00', 'cash', '2025-07-08 17:29:16', 3, NULL);
 
 -- --------------------------------------------------------
 
@@ -286,7 +290,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `rooms`
@@ -304,7 +308,7 @@ ALTER TABLE `shift_reports`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `users`
