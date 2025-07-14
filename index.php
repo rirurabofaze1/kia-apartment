@@ -359,5 +359,27 @@ $roomTypes = array_unique(array_column($rooms, 'room_type'));
         updateCountdown();
     });
     </script>
+	<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var modal = document.getElementById("loginModal");
+    var btn = document.getElementById("loginBtn");
+    var span = document.querySelector("#loginModal .close");
+    if (btn && modal) {
+        btn.onclick = function() {
+            modal.style.display = "block";
+        };
+    }
+    if (span && modal) {
+        span.onclick = function() {
+            modal.style.display = "none";
+        };
+    }
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    };
+});
+</script>
 </body>
 </html>
