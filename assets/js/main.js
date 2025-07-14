@@ -1,18 +1,41 @@
 // KIA SERVICED APARTMENT - Main JavaScript
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize the application
-    initializeApp();
-    
-    // Start countdown timers
-    startCountdownTimers();
-    
-    // Auto-refresh every 30 seconds
-    setInterval(function() {
-        if (!document.querySelector('.modal') || document.querySelector('.modal').style.display === 'none') {
-            location.reload();
-        }
-    }, 30000);
+document.querySelectorAll('.countdown-timer').forEach(function(element) {
+    var target = element.getAttribute('data-target');
+    var bookingId = element.getAttribute('data-booking-id');
+    if (target && bookingId) {
+        var targetDate = new Date(target.replace(' ', 'T')).getTime();
+        startCountdownTimer(element, targetDate, bookingId);
+    }
 });
+
+function startCountdownTimer(element, targetTime, bookingId) {
+    function updateCountdown() {
+        var now = new Date().getTime();
+        var distance = targetTime - now;
+        if (distance <= 0) {
+            element.innerHTML = "EXPIRED";
+            if (bookingId && !element.dataset.autocheckoutDone) {
+                element.dataset.autocheckoutDone = "1";
+                fetch('includes/ajax.php', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    body: 'action=checkout_room&booking_id=' + encodeURIComponent(bookingId)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) location.reload();
+                });
+            }
+            return;
+        }
+        var hours = Math.floor(distance / 1000 / 60 / 60);
+        var minutes = Math.floor((distance / 1000 / 60) % 60);
+        var seconds = Math.floor((distance / 1000) % 60);
+        element.innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
+        setTimeout(updateCountdown, 1000);
+    }
+    updateCountdown();
+}
 
 function initializeApp() {
     // Login modal functionality

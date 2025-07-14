@@ -8,7 +8,7 @@ if (!isLoggedIn()) {
 $booking_id = $_GET['booking_id'] ?? 0;
 
 // Get booking details
-$stmt = $pdo->prepare("SELECT b.*, r.room_number, r.location, r.room_type, r.wifi_name, r.wifi_password, u.full_name as created_by_name 
+$stmt = $pdo->prepare("SELECT b.*, r.room_number, r.location, r.room_type, r.wifi_name, r.floor_number, r.wifi_password, u.full_name as created_by_name 
                       FROM bookings b 
                       JOIN rooms r ON b.room_id = r.id 
                       JOIN users u ON b.created_by = u.id 
@@ -51,8 +51,7 @@ $total_amount = $booking['price_amount'] + $booking['extra_time_amount'] - $book
         <div class="details">
             <p><strong>Guest:</strong> <?php echo htmlspecialchars($booking['guest_name']); ?></p>
             <p><strong>Phone:</strong> <?php echo htmlspecialchars($booking['phone_number']); ?></p>
-            <p><strong>Room:</strong> <?php echo htmlspecialchars($booking['location'] . ' - ' . $booking['room_number']); ?></p>
-            <p><strong>Room Type:</strong> <?php echo htmlspecialchars($booking['room_type']); ?></p>
+            <p><strong>Room:</strong> <?php echo htmlspecialchars($booking['location'] . ' Lantai ' . $booking['floor_number'] . ' No.' .$booking['room_number']); ?></p>
             <p><strong>WiFi:</strong> <?php echo htmlspecialchars($booking['wifi_name']); ?></p>
             <p><strong>WiFi Password:</strong> <?php echo htmlspecialchars($booking['wifi_password']); ?></p>
             <p><strong>Duration:</strong> <?php echo $booking['duration_hours']; ?> hours (<?php echo ucfirst($booking['duration_type']); ?>)</p>
@@ -60,7 +59,16 @@ $total_amount = $booking['price_amount'] + $booking['extra_time_amount'] - $book
                 <p><strong>Extra Time:</strong> <?php echo $booking['extra_time_hours']; ?> hours</p>
             <?php endif; ?>
             <p><strong>Check-in:</strong> <?php echo $booking['checkin_time'] ? formatDateTime($booking['checkin_time']) : 'Not checked in'; ?></p>
-            <p><strong>Check-out:</strong> <?php echo $booking['checkout_time'] ? formatDateTime($booking['checkout_time']) : 'Not checked out'; ?></p>
+            <p><strong>Check-out:</strong> 
+			<?php
+				if ($booking['checkin_time'] && $booking['duration_hours']) {
+				$est_checkout = date('Y-m-d H:i:s', strtotime($booking['checkin_time'] . ' + ' . $booking['duration_hours'] . ' hours'));
+				echo formatDateTime($est_checkout);
+				} else {
+				echo 'N/A';
+				}
+			?>
+</p>
         </div>
         
         <div class="total">

@@ -2,7 +2,7 @@
 require_once 'includes/config.php';
 
 // Get rooms with their current bookings
-// For public view: only show active bookings (booked, checkin)
+// For public view: only show active bookings (booked, checkin, checkout)
 // For logged-in users: show all recent bookings including checkout for management
 $isLoggedIn = isLoggedIn();
 
@@ -43,41 +43,35 @@ if ($isLoggedIn) {
                 END,
                 r.location, r.floor_number, r.room_number";
 } else {
-    // Public view: only show active bookings (booked, checkin) - hide customer info for checkout/ready rooms
+    // Public view: show all rooms, but only ready and checkout will be shown in the list
     $sql = "SELECT r.*, 
-                   b.id as booking_id,
-                   b.guest_name,
-                   b.arrival_time,
-                   b.phone_number,
-                   b.duration_type,
-                   b.duration_hours,
-                   b.price_amount,
-                   b.payment_method,
-                   b.deposit_type,
-                   b.deposit_amount,
-                   b.notes,
-                   b.status as booking_status,
-                   b.checkin_time,
-                   b.checkout_time,
-                   b.extra_time_hours,
-                   b.extra_time_amount
-            FROM rooms r 
-            LEFT JOIN (
-                SELECT b1.*
-                FROM bookings b1
-                INNER JOIN (
-                    SELECT room_id, MAX(id) as max_id
-                    FROM bookings 
-                    WHERE status IN ('booked', 'checkin')
-                    GROUP BY room_id
-                ) b2 ON b1.room_id = b2.room_id AND b1.id = b2.max_id
-            ) b ON r.id = b.room_id
-            ORDER BY 
-                CASE 
-                    WHEN b.status = 'booked' AND b.arrival_time < NOW() THEN 1
-                    ELSE 2
-                END,
-                r.location, r.floor_number, r.room_number";
+               b.id as booking_id,
+               b.guest_name,
+               b.arrival_time,
+               b.phone_number,
+               b.duration_type,
+               b.duration_hours,
+               b.price_amount,
+               b.payment_method,
+               b.deposit_type,
+               b.deposit_amount,
+               b.notes,
+               b.status as booking_status,
+               b.checkin_time,
+               b.checkout_time,
+               b.extra_time_hours,
+               b.extra_time_amount
+        FROM rooms r 
+        LEFT JOIN (
+            SELECT b1.*
+            FROM bookings b1
+            INNER JOIN (
+                SELECT room_id, MAX(id) as max_id
+                FROM bookings 
+                WHERE status IN ('booked', 'checkin', 'checkout')
+                GROUP BY room_id
+            ) b2 ON b1.room_id = b2.room_id AND b1.id = b2.max_id
+        ) b ON r.id = b.room_id";
 }
 
 $stmt = $pdo->prepare($sql);
@@ -86,10 +80,9 @@ $rooms = $stmt->fetchAll();
 
 // Update room statuses based on bookings and room status
 foreach ($rooms as $key => $room) {
-    // If room status is 'ready', it overrides any booking status and clears booking info
     if ($room['status'] == 'ready') {
         $rooms[$key]['status'] = 'ready';
-        // Clear booking information for ready rooms to protect customer privacy
+        // Clear booking info for privacy
         $rooms[$key]['booking_id'] = null;
         $rooms[$key]['guest_name'] = null;
         $rooms[$key]['arrival_time'] = null;
@@ -115,6 +108,7 @@ foreach ($rooms as $key => $room) {
 
 // Get unique room types for filter
 $roomTypes = array_unique(array_column($rooms, 'room_type'));
+
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -134,7 +128,7 @@ $roomTypes = array_unique(array_column($rooms, 'room_type'));
                     <i class="countdown-icon-small">⏰</i>
                     <span>Countdown</span>
                 </a>
-                <?php if (isLoggedIn()): ?>
+                <?php if ($isLoggedIn): ?>
                     <span style="color: var(--primary-pink); margin-right: 1rem;">
                         Welcome, <?php echo htmlspecialchars($_SESSION['full_name']); ?> (<?php echo ucfirst($_SESSION['user_role']); ?>)
                     </span>
@@ -169,7 +163,7 @@ $roomTypes = array_unique(array_column($rooms, 'room_type'));
                         <option value="">All Status</option>
                         <option value="ready">Ready</option>
                         <option value="checkout">Checkout</option>
-                        <?php if (isLoggedIn()): ?>
+                        <?php if ($isLoggedIn): ?>
                             <option value="booked">Booked</option>
                             <option value="checkin">Check-in</option>
                         <?php endif; ?>
@@ -188,7 +182,7 @@ $roomTypes = array_unique(array_column($rooms, 'room_type'));
             <?php foreach ($rooms as $room): ?>
                 <?php 
                 // Only show ready and checkout rooms to public
-                if (!isLoggedIn() && !in_array($room['status'], ['ready', 'checkout'])) {
+                if (!$isLoggedIn && !in_array($room['status'], ['ready', 'checkout'])) {
                     continue;
                 }
                 ?>
@@ -209,14 +203,14 @@ $roomTypes = array_unique(array_column($rooms, 'room_type'));
                             <p><strong>Floor:</strong> <?php echo $room['floor_number']; ?></p>
                             <p><strong>Type:</strong> <?php echo htmlspecialchars($room['room_type']); ?></p>
                             
-                            <?php if (isLoggedIn()): ?>
+                            <?php if ($isLoggedIn): ?>
                                 <p><strong>WiFi:</strong> <?php echo htmlspecialchars($room['wifi_name']); ?></p>
                                 <p><strong>Password:</strong> <?php echo htmlspecialchars($room['wifi_password']); ?></p>
                             <?php endif; ?>
                         </div>
                     </div>
 
-                    <?php if ($room['booking_id'] && isLoggedIn()): ?>
+                    <?php if ($room['booking_id'] && $isLoggedIn): ?>
                         <div class="guest-info">
                             <h4>Guest Information</h4>
                             <p><strong>Name:</strong> <?php echo htmlspecialchars($room['guest_name']); ?></p>
@@ -266,12 +260,14 @@ $roomTypes = array_unique(array_column($rooms, 'room_type'));
                             ?>
                             <div class="countdown">
                                 <p><strong>Checkout Time:</strong></p>
-                                <div class="countdown-timer" data-target="<?php echo $checkout_datetime; ?>"></div>
+                                <div class="countdown-timer" 
+                                     data-target="<?php echo $checkout_datetime; ?>"
+                                     data-booking-id="<?php echo $room['booking_id']; ?>"></div>
                             </div>
                         <?php endif; ?>
                     <?php endif; ?>
 
-                    <?php if (isLoggedIn()): ?>
+                    <?php if ($isLoggedIn): ?>
                         <div class="room-actions">
                             <?php if ($room['status'] == 'ready'): ?>
                                 <button onclick="bookRoom(<?php echo $room['id']; ?>)" 
@@ -328,5 +324,40 @@ $roomTypes = array_unique(array_column($rooms, 'room_type'));
     </footer>
 
     <script src="assets/js/main.js"></script>
+    <script>
+    // Otomatis checkout ketika waktu habis pada countdown checkin
+    document.querySelectorAll('.countdown-timer[data-booking-id]').forEach(function(element) {
+        var target = element.getAttribute('data-target');
+        var bookingId = element.getAttribute('data-booking-id');
+        if (!target || !bookingId) return;
+        var targetDate = new Date(target.replace(' ', 'T')).getTime();
+        function updateCountdown() {
+            var now = new Date().getTime();
+            var distance = targetDate - now;
+            if (distance <= 0) {
+                element.innerHTML = "EXPIRED";
+                if (!element.dataset.autocheckoutDone) {
+                    element.dataset.autocheckoutDone = "1";
+                    fetch('includes/ajax.php', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        body: 'action=checkout_room&booking_id=' + encodeURIComponent(bookingId)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) location.reload();
+                    });
+                }
+                return;
+            }
+            // tampilkan waktu sisa
+            var hours = Math.floor(distance / 1000 / 60 / 60);
+            var minutes = Math.floor((distance / 1000 / 60) % 60);
+            var seconds = Math.floor((distance / 1000) % 60);
+            setTimeout(updateCountdown, 1000);
+        }
+        updateCountdown();
+    });
+    </script>
 </body>
 </html>
