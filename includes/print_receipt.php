@@ -1,5 +1,5 @@
 <?php
-require_once 'config.php';
+require_once "../includes/config.php";
 
 if (!isLoggedIn()) {
     die('Not authorized');
@@ -24,76 +24,176 @@ if (!$booking) {
 $total_amount = $booking['price_amount'] + $booking['extra_time_amount'] - $booking['refund_amount'];
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Receipt - KIA SERVICED APARTMENT</title>
+    <meta charset="UTF-8">
+    <title>Struk | KIA SERVICED APARTMENT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .receipt { max-width: 400px; margin: 0 auto; }
-        .header { text-align: center; margin-bottom: 20px; }
-        .details { margin-bottom: 10px; }
-        .total { border-top: 2px solid #000; padding-top: 10px; font-weight: bold; }
+        body {
+            font-family: monospace, Arial, sans-serif;
+            margin: 0;
+            width: 58mm;
+            background: white;
+        }
+        #struk {
+            width: 58mm;
+            max-width: 58mm;
+            padding: 20px;
+            font-size: 15px;
+            color: #000;
+        }
+        hr {
+            border: none;
+            border-top: 1px dashed #000;
+            margin: 5px 0;
+        }
+        table {
+            width: 100%;
+        }
+        td {
+            vertical-align: top;
+        }
+        #buttons {
+            margin-top: 20px;
+        }
+        button, a {
+            padding: 8px 12px;
+            background-color: #333;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        button:hover, a:hover {
+            background-color: #555;
+        }
         @media print {
             body { margin: 0; }
-            .no-print { display: none; }
+            #buttons { display: none; }
         }
     </style>
 </head>
 <body>
-    <div class="receipt">
-        <div class="header">
-            <h2>KIA SERVICED APARTMENT</h2>
-			<p>Ruko A1 Gedung Pink Apartment Grand Sentraland Wadas, Telukjambe Timur, Karawang, Jawa Barat 41361</p>
-            <p>Receipt #<?php echo $booking['id']; ?></p>
-            <p><?php echo formatDateTime($booking['created_at']); ?></p>
+<div id="struk">
+    <center>
+        <div style="width: 100%; height: 120px; overflow: hidden; position: relative;">
+            <img src="../assets/images/logo.png" alt="Logo Strip"
+                 style="width: 100%; position: absolute; top: 50%; left: 0; transform: translateY(-50%);">
         </div>
-        
-        <div class="details">
-            <p><strong>Guest:</strong> <?php echo htmlspecialchars($booking['guest_name']); ?></p>
-            <p><strong>Phone:</strong> <?php echo htmlspecialchars($booking['phone_number']); ?></p>
-            <p><strong>Room:</strong> <?php echo htmlspecialchars($booking['location'] . ' Lantai ' . $booking['floor_number'] . ' No.' .$booking['room_number']); ?></p>
-            <p><strong>WiFi:</strong> <?php echo htmlspecialchars($booking['wifi_name']); ?></p>
-            <p><strong>WiFi Password:</strong> <?php echo htmlspecialchars($booking['wifi_password']); ?></p>
-            <p><strong>Duration:</strong> <?php echo $booking['duration_hours']; ?> hours (<?php echo ucfirst($booking['duration_type']); ?>)</p>
-            <?php if ($booking['extra_time_hours'] > 0): ?>
-                <p><strong>Extra Time:</strong> <?php echo $booking['extra_time_hours']; ?> hours</p>
-            <?php endif; ?>
-            <p><strong>Check-in:</strong> <?php echo $booking['checkin_time'] ? formatDateTime($booking['checkin_time']) : 'Not checked in'; ?></p>
-            <p><strong>Check-out:</strong> 
-			<?php
-				if ($booking['checkin_time'] && $booking['duration_hours']) {
-				$est_checkout = date('Y-m-d H:i:s', strtotime($booking['checkin_time'] . ' + ' . $booking['duration_hours'] . ' hours'));
-				echo formatDateTime($est_checkout);
-				} else {
-				echo 'N/A';
-				}
-			?>
-</p>
-        </div>
-        
-        <div class="total">
-            <p>Base Amount: <?php echo formatCurrency($booking['price_amount']); ?></p>
-            <?php if ($booking['extra_time_amount'] > 0): ?>
-                <p>Extra Time: <?php echo formatCurrency($booking['extra_time_amount']); ?></p>
-            <?php endif; ?>
-            <?php if ($booking['refund_amount'] > 0): ?>
-                <p>Refund: -<?php echo formatCurrency($booking['refund_amount']); ?></p>
-            <?php endif; ?>
-            <p><strong>Total: <?php echo formatCurrency($total_amount); ?></strong></p>
-            <p>Payment: <?php echo ucfirst($booking['payment_method']); ?></p>
-            <p>Deposit: <?php echo formatCurrency($booking['deposit_amount']); ?> (<?php echo ucfirst($booking['deposit_type']); ?>)</p>
-        </div>
-        
-        <div style="text-align: center; margin-top: 20px;">
-            <p>Terima kasih telah menggunakan layanan kami!</p>
-            <p>Thank you for using our services!</p>
-            <p>Served by: <?php echo htmlspecialchars($booking['created_by_name']); ?></p>
-        </div>
-        
-        <div class="no-print" style="text-align: center; margin-top: 20px;">
-            <button onclick="window.print()">Print Receipt</button>
-            <button onclick="window.close()">Close</button>
-        </div>
+        <p>
+            Ruko A1 Gedung Pink Apartment Grand Sentraland Wadas<br>
+            Telukjambe Timur, Karawang, Jawa Barat 41361<br>
+            0895-3171-0777
+        </p>
+        <hr />
+        <p><?= formatDateTime($booking['created_at']); ?><br/>Room No.<?= htmlspecialchars($booking['room_number']); ?></p>
+    </center>
+    <p>Receipt ID: <?= $booking['id'] ?></p>
+    <table>
+        <tr>
+            <td>Guest</td>
+            <td style="text-align:right;"><?= htmlspecialchars($booking['guest_name']); ?></td>
+        </tr>
+        <tr>
+            <td>Phone</td>
+            <td style="text-align:right;"><?= htmlspecialchars($booking['phone_number']); ?></td>
+        </tr>
+        <tr>
+            <td>Room</td>
+            <td style="text-align:right;"><?= htmlspecialchars($booking['location'] . ' Lt ' . $booking['floor_number'] . ' No.' . $booking['room_number']); ?></td>
+        </tr>
+        <tr>
+            <td>WiFi</td>
+            <td style="text-align:right;"><?= htmlspecialchars($booking['wifi_name']); ?></td>
+        </tr>
+        <tr>
+            <td>WiFi Pass</td>
+            <td style="text-align:right;"><?= htmlspecialchars($booking['wifi_password']); ?></td>
+        </tr>
+        <tr>
+            <td>Duration</td>
+            <td style="text-align:right;"><?= $booking['duration_hours']; ?> Jam (<?= ucfirst($booking['duration_type']); ?>)</td>
+        </tr>
+        <?php if ($booking['extra_time_hours'] > 0): ?>
+        <tr>
+            <td>Extra Time</td>
+            <td style="text-align:right;"><?= $booking['extra_time_hours']; ?> Jam</td>
+        </tr>
+        <?php endif; ?>
+        <tr>
+            <td>Check-in</td>
+            <td style="text-align:right;">
+                <?= $booking['checkin_time'] ? formatDateTime($booking['checkin_time']) : 'Not checked in'; ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Check-out</td>
+            <td style="text-align:right;">
+            <?php
+                if ($booking['checkin_time'] && $booking['duration_hours']) {
+                    $est_checkout = date('Y-m-d H:i:s', strtotime($booking['checkin_time'] . ' + ' . $booking['duration_hours'] . ' hours'));
+                    echo formatDateTime($est_checkout);
+                } else {
+                    echo 'N/A';
+                }
+            ?>
+            </td>
+        </tr>
+    </table>
+    <hr />
+    <table>
+        <tr>
+            <td>Base</td>
+            <td style="text-align:right;"><?= formatCurrency($booking['price_amount']); ?></td>
+        </tr>
+        <?php if ($booking['extra_time_amount'] > 0): ?>
+        <tr>
+            <td>Extra Time</td>
+            <td style="text-align:right;"><?= formatCurrency($booking['extra_time_amount']); ?></td>
+        </tr>
+        <?php endif; ?>
+        <?php if ($booking['refund_amount'] > 0): ?>
+        <tr>
+            <td>Refund</td>
+            <td style="text-align:right;">-<?= formatCurrency($booking['refund_amount']); ?></td>
+        </tr>
+        <?php endif; ?>
+        <tr>
+            <td>Total</td>
+            <td style="text-align:right;"><strong><?= formatCurrency($total_amount); ?></strong></td>
+        </tr>
+        <tr>
+            <td>Payment (<?= ucfirst($booking['payment_method']); ?>)</td>
+            <td style="text-align:right;">
+                <?= formatCurrency($booking['price_amount'] + $booking['extra_time_amount']); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Deposit (<?= ucfirst($booking['deposit_type']); ?>)</td>
+            <td style="text-align:right;"><?= formatCurrency($booking['deposit_amount']); ?></td>
+        </tr>
+    </table>
+    <center>
+        <p>Terima kasih telah menggunakan layanan kami!<br>Thank you for using our services!</p>
+        <p>Served by: <?= htmlspecialchars($booking['created_by_name']); ?></p>
+    </center>
+    <div id="buttons" style="text-align: center;">
+        <button onclick="window.print()">Print</button>
+        <button onclick="window.close()">Close</button>
     </div>
+</div>
+<script>
+window.onload = function () {
+    setTimeout(() => {
+        window.print();
+        setTimeout(function(){
+            window.close();
+        }, 2000);
+    }, 1500);
+};
+</script>
 </body>
 </html>

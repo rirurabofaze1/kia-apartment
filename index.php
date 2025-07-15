@@ -358,28 +358,84 @@ $roomTypes = array_unique(array_column($rooms, 'room_type'));
         }
         updateCountdown();
     });
-    </script>
-	<script>
-document.addEventListener("DOMContentLoaded", function() {
-    var modal = document.getElementById("loginModal");
-    var btn = document.getElementById("loginBtn");
-    var span = document.querySelector("#loginModal .close");
-    if (btn && modal) {
-        btn.onclick = function() {
+	  // Checkout countdown (sudah ada)
+    document.querySelectorAll('.countdown-timer[data-booking-id]').forEach(function(element) {
+        var target = element.getAttribute('data-target');
+        var bookingId = element.getAttribute('data-booking-id');
+        if (!target || !bookingId) return;
+        var targetDate = new Date(target.replace(' ', 'T')).getTime();
+        function updateCountdown() {
+            var now = new Date().getTime();
+            var distance = targetDate - now;
+            if (distance <= 0) {
+                element.innerHTML = "EXPIRED";
+                if (!element.dataset.autocheckoutDone) {
+                    element.dataset.autocheckoutDone = "1";
+                    fetch('includes/ajax.php', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        body: 'action=checkout_room&booking_id=' + encodeURIComponent(bookingId)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) location.reload();
+                    });
+                }
+                return;
+            }
+            var hours = Math.floor(distance / 1000 / 60 / 60);
+            var minutes = Math.floor((distance / 1000 / 60) % 60);
+            var seconds = Math.floor((distance / 1000) % 60);
+            element.innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
+            setTimeout(updateCountdown, 1000);
+        }
+        updateCountdown();
+    });
+
+    // Arrival countdown (tambahan)
+    document.querySelectorAll('.countdown-timer:not([data-booking-id])').forEach(function(element) {
+        var target = element.getAttribute('data-target');
+        if (!target) return;
+        var targetDate = new Date(target.replace(' ', 'T')).getTime();
+        function updateArrivalCountdown() {
+            var now = new Date().getTime();
+            var distance = targetDate - now;
+            if (distance <= 0) {
+                element.innerHTML = "EXPIRED";
+                return;
+            }
+            var hours = Math.floor(distance / 1000 / 60 / 60);
+            var minutes = Math.floor((distance / 1000 / 60) % 60);
+            var seconds = Math.floor((distance / 1000) % 60);
+            element.innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
+            setTimeout(updateArrivalCountdown, 1000);
+        }
+        updateArrivalCountdown();
+    });
+	
+	// login button fix
+	document.addEventListener("DOMContentLoaded", function() {
+		var modal = document.getElementById("loginModal");
+		var btn = document.getElementById("loginBtn");
+		var span = document.querySelector("#loginModal .close");
+		if (btn && modal) {
+			btn.onclick = function() {
             modal.style.display = "block";
-        };
-    }
-    if (span && modal) {
-        span.onclick = function() {
+			};
+		}
+		if (span && modal) {
+			span.onclick = function() {
             modal.style.display = "none";
-        };
-    }
+			};
+		}
     window.onclick = function(event) {
         if (event.target == modal) {
             modal.style.display = "none";
         }
     };
-});
+	});
+    
+
 </script>
 </body>
 </html>
