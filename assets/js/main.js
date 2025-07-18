@@ -1,12 +1,89 @@
 // KIA SERVICED APARTMENT - Main JavaScript
-document.querySelectorAll('.countdown-timer').forEach(function(element) {
-    var target = element.getAttribute('data-target');
-    var bookingId = element.getAttribute('data-booking-id');
-    if (target && bookingId) {
-        var targetDate = new Date(target.replace(' ', 'T')).getTime();
-        startCountdownTimer(element, targetDate, bookingId);
+
+function initializeApp() {
+    // Login modal functionality
+    const loginBtn = document.getElementById('loginBtn');
+    const loginModal = document.getElementById('loginModal');
+    const closeModalBtn = document.querySelector('#loginModal .close');
+    
+    if (loginBtn && loginModal) {
+        loginBtn.onclick = function() {
+            loginModal.style.display = "block";
+        };
     }
-});
+    if (closeModalBtn && loginModal) {
+        closeModalBtn.onclick = function() {
+            loginModal.style.display = "none";
+        };
+    }
+    window.onclick = function(event) {
+        if (event.target == loginModal) {
+            loginModal.style.display = "none";
+        }
+    };
+
+    // Filter functionality
+    const roomTypeFilter = document.getElementById('roomTypeFilter');
+    const statusFilter = document.getElementById('statusFilter');
+    const searchFilter = document.getElementById('searchFilter');
+
+    if (roomTypeFilter) roomTypeFilter.addEventListener('change', filterRooms);
+    if (statusFilter) statusFilter.addEventListener('change', filterRooms);
+    if (searchFilter) searchFilter.addEventListener('input', filterRooms); // Use 'input' for instant search
+
+    // Initial filter on page load
+    filterRooms();
+}
+
+function filterRooms() {
+    const roomTypeFilter = document.getElementById('roomTypeFilter')?.value.toLowerCase() || '';
+    const statusFilter = document.getElementById('statusFilter')?.value.toLowerCase() || '';
+    const searchFilter = document.getElementById('searchFilter')?.value.toLowerCase() || '';
+    
+    const roomCards = document.querySelectorAll('.room-card');
+    
+    roomCards.forEach(card => {
+        const roomType = card.dataset.roomType?.toLowerCase() || '';
+        const status = card.dataset.status?.toLowerCase() || '';
+        const roomNumber = card.dataset.roomNumber?.toLowerCase() || '';
+        const location = card.dataset.location?.toLowerCase() || '';
+        
+        const matchesType = !roomTypeFilter || roomType === roomTypeFilter;
+        const matchesStatus = !statusFilter || status === statusFilter;
+        const matchesSearch = !searchFilter || 
+            roomNumber.includes(searchFilter) || 
+            location.includes(searchFilter);
+        
+        if (matchesType && matchesStatus && matchesSearch) {
+            card.style.display = '';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+function startCountdownTimers() {
+    // Handle all countdown-timer elements, both with and without bookingId
+    document.querySelectorAll('.countdown-timer').forEach(function(element) {
+        var target = element.getAttribute('data-target');
+        var bookingId = element.getAttribute('data-booking-id');
+        if (target && bookingId) {
+            var targetDate = new Date(target.replace(' ', 'T')).getTime();
+            startCountdownTimer(element, targetDate, bookingId);
+        } else if (target) {
+            // Arrival countdown (no bookingId)
+            var targetDate = new Date(target.replace(' ', 'T')).getTime();
+            startArrivalCountdown(element, targetDate);
+        }
+    });
+    document.querySelectorAll('.countdown-timer-large').forEach(function(element) {
+        const targetTime = element.dataset.target;
+        if (targetTime) {
+            updateCountdown(element, targetTime);
+            setInterval(() => updateCountdown(element, targetTime), 1000);
+        }
+    });
+}
 
 function startCountdownTimer(element, targetTime, bookingId) {
     function updateCountdown() {
@@ -37,76 +114,21 @@ function startCountdownTimer(element, targetTime, bookingId) {
     updateCountdown();
 }
 
-function initializeApp() {
-    // Login modal functionality
-    const loginBtn = document.getElementById('loginBtn');
-    const loginModal = document.getElementById('loginModal');
-    const closeModal = document.querySelector('.close');
-    
-    if (loginBtn) {
-        loginBtn.addEventListener('click', function() {
-            loginModal.style.display = 'block';
-        });
+function startArrivalCountdown(element, targetTime) {
+    function updateArrivalCountdown() {
+        var now = new Date().getTime();
+        var distance = targetTime - now;
+        if (distance <= 0) {
+            element.innerHTML = "EXPIRED";
+            return;
+        }
+        var hours = Math.floor(distance / 1000 / 60 / 60);
+        var minutes = Math.floor((distance / 1000 / 60) % 60);
+        var seconds = Math.floor((distance / 1000) % 60);
+        element.innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
+        setTimeout(updateArrivalCountdown, 1000);
     }
-    
-    if (closeModal) {
-        closeModal.addEventListener('click', function() {
-            loginModal.style.display = 'none';
-        });
-    }
-    
-    // Close modal when clicking outside
-    window.addEventListener('click', function(event) {
-        if (event.target === loginModal) {
-            loginModal.style.display = 'none';
-        }
-    });
-    
-    // Filter functionality
-    const filterInputs = document.querySelectorAll('.filter-control');
-    filterInputs.forEach(input => {
-        input.addEventListener('change', filterRooms);
-        input.addEventListener('keyup', filterRooms);
-    });
-}
-
-function filterRooms() {
-    const roomTypeFilter = document.getElementById('roomTypeFilter')?.value.toLowerCase() || '';
-    const statusFilter = document.getElementById('statusFilter')?.value.toLowerCase() || '';
-    const searchFilter = document.getElementById('searchFilter')?.value.toLowerCase() || '';
-    
-    const roomCards = document.querySelectorAll('.room-card');
-    
-    roomCards.forEach(card => {
-        const roomType = card.dataset.roomType?.toLowerCase() || '';
-        const status = card.dataset.status?.toLowerCase() || '';
-        const roomNumber = card.dataset.roomNumber?.toLowerCase() || '';
-        const location = card.dataset.location?.toLowerCase() || '';
-        
-        const matchesType = !roomTypeFilter || roomType.includes(roomTypeFilter);
-        const matchesStatus = !statusFilter || status === statusFilter;
-        const matchesSearch = !searchFilter || 
-            roomNumber.includes(searchFilter) || 
-            location.includes(searchFilter);
-        
-        if (matchesType && matchesStatus && matchesSearch) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-}
-
-function startCountdownTimers() {
-    const countdownElements = document.querySelectorAll('.countdown-timer, .countdown-timer-large');
-    
-    countdownElements.forEach(element => {
-        const targetTime = element.dataset.target;
-        if (targetTime) {
-            updateCountdown(element, targetTime);
-            setInterval(() => updateCountdown(element, targetTime), 1000);
-        }
-    });
+    updateArrivalCountdown();
 }
 
 function updateCountdown(element, targetTime) {
@@ -121,27 +143,21 @@ function updateCountdown(element, targetTime) {
         
         element.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         
-        // Handle different countdown styles
         if (element.classList.contains('countdown-timer-large')) {
-            // For countdown page - add urgent class if less than 15 minutes
             if (difference <= 15 * 60 * 1000) {
                 element.classList.add('urgent');
             } else {
                 element.classList.remove('urgent');
             }
         } else {
-            // For regular countdown timers
             element.parentElement.classList.remove('expired');
         }
     } else {
         element.textContent = 'EXPIRED';
-        
         if (element.classList.contains('countdown-timer-large')) {
             element.classList.add('urgent');
         } else {
             element.parentElement.classList.add('expired');
-            
-            // Show confirmation buttons for expired bookings
             const confirmationDiv = element.parentElement.parentElement.querySelector('.confirmation-buttons');
             if (confirmationDiv) {
                 confirmationDiv.style.display = 'block';
@@ -204,11 +220,11 @@ function createBookingModal(roomId) {
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="guest_name">Guest Name:</label>
-                                <input type="text" id="guest_name" name="guest_name" class="form-control" autocomplete="off" placeholder="Enter guest full name" required>
+                                <input type="hidden" id="guest_name" name="guest_name" class="form-control" autocomplete="off" placeholder="Enter guest full name" required>
                             </div>
                             <div class="form-group">
                                 <label for="phone_number">Phone Number:</label>
-                                <input type="tel" id="phone_number" name="phone_number" class="form-control" autocomplete="off" placeholder="e.g., +62812345678" required>
+                                <input type="hidden" id="phone_number" name="phone_number" class="form-control" autocomplete="off" placeholder="e.g., +62812345678" required>
                             </div>
                         </div>
                     </div>
@@ -295,69 +311,70 @@ function createBookingModal(roomId) {
     `;
     
     // Handle duration type change
-modal.querySelector('#duration_type').addEventListener('change', function() {
-    const durationHoursGroup = modal.querySelector('#duration_hours_group');
-    const durationHoursInput = modal.querySelector('#duration_hours');
-    const arrivalTimeInput = modal.querySelector('#arrival_time');
+    modal.querySelector('#duration_type').addEventListener('change', function() {
+        const durationHoursGroup = modal.querySelector('#duration_hours_group');
+        const durationHoursInput = modal.querySelector('#duration_hours');
+        const arrivalTimeInput = modal.querySelector('#arrival_time');
 
-    if (this.value === 'fullday') {
-        // Hide duration hours input for fullday
-        durationHoursGroup.style.display = 'none';
-        durationHoursInput.removeAttribute('required');
+        if (this.value === 'fullday') {
+            durationHoursGroup.style.display = 'none';
+            durationHoursInput.removeAttribute('required');
 
-        // Penentuan checkout khusus fullday:
-        // - Jika checkin >= 12:00, checkout jam 12:00 besok
-        // - Jika checkin < 12:00, checkout jam 12:00 hari itu juga
-        if (arrivalTimeInput.value) {
-            const arrivalDate = new Date(arrivalTimeInput.value);
-            const arrivalHour = arrivalDate.getHours();
+            if (arrivalTimeInput.value) {
+                const arrivalDate = new Date(arrivalTimeInput.value);
+                const hour = arrivalDate.getHours();
+                const minute = arrivalDate.getMinutes();
+
+                let checkoutDate = new Date(arrivalDate);
+                // Kunci: checkout selalu jam 12:00:00, tidak jam 12:menit checkin
+                if (
+                    (hour < 23) ||
+                    (hour === 23 && minute < 59) ||
+                    (hour === 0 && minute <= 1)
+                ) {
+                    checkoutDate.setDate(checkoutDate.getDate() + 1);
+                    checkoutDate.setHours(12, 0, 0, 0);
+                } else {
+                    checkoutDate.setHours(12, 0, 0, 0);
+                }
+                const durationMs = checkoutDate.getTime() - arrivalDate.getTime();
+                const durationHours = Math.ceil(durationMs / (1000 * 60 * 60));
+                durationHoursInput.value = durationHours;
+            } else {
+                durationHoursInput.value = 12;
+            }
+        } else {
+            durationHoursGroup.style.display = 'block';
+            durationHoursInput.setAttribute('required', 'required');
+            durationHoursInput.value = '';
+        }
+    });
+
+    // Handle arrival time change for fullday calculation
+    modal.querySelector('#arrival_time').addEventListener('change', function() {
+        const durationTypeSelect = modal.querySelector('#duration_type');
+        const durationHoursInput = modal.querySelector('#duration_hours');
+        if (durationTypeSelect.value === 'fullday' && this.value) {
+            const arrivalDate = new Date(this.value);
+            const hour = arrivalDate.getHours();
+            const minute = arrivalDate.getMinutes();
 
             let checkoutDate = new Date(arrivalDate);
-            if (arrivalHour >= 12) {
-                // checkout jam 12:00 besok
+            if (
+                (hour < 23) ||
+                (hour === 23 && minute < 59) ||
+                (hour === 0 && minute <= 1)
+            ) {
                 checkoutDate.setDate(checkoutDate.getDate() + 1);
                 checkoutDate.setHours(12, 0, 0, 0);
             } else {
-                // checkout jam 12:00 hari itu juga
                 checkoutDate.setHours(12, 0, 0, 0);
             }
             const durationMs = checkoutDate.getTime() - arrivalDate.getTime();
             const durationHours = Math.ceil(durationMs / (1000 * 60 * 60));
             durationHoursInput.value = durationHours;
-        } else {
-            durationHoursInput.value = 12; // Default 12 hours
         }
-		} else {
-        // Show duration hours input for transit
-        durationHoursGroup.style.display = 'block';
-        durationHoursInput.setAttribute('required', 'required');
-        durationHoursInput.value = '';
-		}
-	});
-
-// Handle arrival time change for fullday calculation
-modal.querySelector('#arrival_time').addEventListener('change', function() {
-    const durationTypeSelect = modal.querySelector('#duration_type');
-    const durationHoursInput = modal.querySelector('#duration_hours');
-
-    if (durationTypeSelect.value === 'fullday' && this.value) {
-        const arrivalDate = new Date(this.value);
-        const arrivalHour = arrivalDate.getHours();
-
-        let checkoutDate = new Date(arrivalDate);
-        if (arrivalHour >= 12) {
-            // checkout jam 12:00 besok
-            checkoutDate.setDate(checkoutDate.getDate() + 1);
-            checkoutDate.setHours(12, 0, 0, 0);
-        } else {
-            // checkout jam 12:00 hari itu juga
-            checkoutDate.setHours(12, 0, 0, 0);
-        }
-        const durationMs = checkoutDate.getTime() - arrivalDate.getTime();
-        const durationHours = Math.ceil(durationMs / (1000 * 60 * 60));
-        durationHoursInput.value = durationHours;
-		}
-	});
+    });
     
     // Handle deposit type change
     modal.querySelector('#deposit_type').addEventListener('change', function() {
@@ -365,12 +382,10 @@ modal.querySelector('#arrival_time').addEventListener('change', function() {
         const depositAmountInput = modal.querySelector('#deposit_amount');
         
         if (this.value === 'no_deposit' || this.value === 'id_card') {
-            // Hide deposit amount input
             depositAmountGroup.style.display = 'none';
             depositAmountInput.removeAttribute('required');
             depositAmountInput.value = '0';
         } else {
-            // Show deposit amount input for cash
             depositAmountGroup.style.display = 'block';
             depositAmountInput.setAttribute('required', 'required');
             depositAmountInput.value = '';
@@ -420,13 +435,11 @@ modal.querySelector('#arrival_time').addEventListener('change', function() {
         const form = modal.querySelector('#bookingForm');
         if (form) {
             form.reset();
-            // Clear all input values explicitly
             const inputs = form.querySelectorAll('input, select, textarea');
             inputs.forEach(input => {
                 input.value = '';
                 input.removeAttribute('value');
             });
-            // Reset arrival time after clearing
             modal.querySelector('#arrival_time').value = now.toISOString().slice(0, 16);
         }
     }, 100);
@@ -436,7 +449,6 @@ modal.querySelector('#arrival_time').addEventListener('change', function() {
 
 function closeModal(element) {
     const modal = element.closest('.modal');
-    // Clear form data before closing
     const form = modal.querySelector('form');
     if (form) {
         form.reset();

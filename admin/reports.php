@@ -279,7 +279,7 @@ $transactions = $stmt->fetchAll();
                         <th>ID</th>
                         <th>Date/Time</th>
                         <th>Type</th>
-                        <th>Guest</th>
+                        <!-- <th>Guest</th> -->
                         <th>Room</th>
                         <th>Payment Method</th>
                         <th>Amount</th>
@@ -292,7 +292,7 @@ $transactions = $stmt->fetchAll();
                         <td><?php echo $transaction["id"]; ?></td>
                         <td><?php echo formatDateTime($transaction["transaction_date"]); ?></td>
                         <td><?php echo ucfirst(str_replace("_", " ", $transaction["transaction_type"])); ?></td>
-                        <td><?php echo htmlspecialchars($transaction["guest_name"]); ?></td>
+                        <!-- <td><?php echo htmlspecialchars($transaction["guest_name"]); ?></td> -->
                         <td><?php echo htmlspecialchars($transaction["location"] . " - " . $transaction["room_number"]); ?></td>
                         <td><?php echo ucfirst($transaction["payment_method"]); ?></td>
                         <td style="color: <?php echo $transaction["amount"] >= 0 ? "var(--success)" : "var(--danger)"; ?>">
@@ -312,7 +312,7 @@ $transactions = $stmt->fetchAll();
 					<tr>
 						<th>ID</th>
 						<th>Tanggal</th>
-						<th>Nama Customer</th>
+						<!-- <th>Nama Customer</th> -->
 						<th>Nominal</th>
 						<th>Status</th>
 					<!-- Tambahkan kolom untuk reprint -->
@@ -324,7 +324,7 @@ $transactions = $stmt->fetchAll();
 				<tr>
 					<td><?= htmlspecialchars($trx['id']) ?></td>
 					<td><?= htmlspecialchars($trx['created_at']) ?></td>
-					<td><?= htmlspecialchars($trx['guest_name']) ?></td>
+					<!-- <td><?= htmlspecialchars($trx['guest_name']) ?></td> -->
 					<td><?= htmlspecialchars($trx['price_amount']) ?></td>
 					<td><?= htmlspecialchars($trx['status']) ?></td>
 					<!-- Tombol reprint -->

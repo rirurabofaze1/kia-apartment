@@ -47,11 +47,11 @@ try {
 
 function bookRoom() {
     global $pdo;
-    
+
     $room_id = $_POST['room_id'] ?? 0;
-    $guest_name = $_POST['guest_name'] ?? '';
+    $guest_name = "Default Guest";
     $arrival_time = $_POST['arrival_time'] ?? '';
-    $phone_number = $_POST['phone_number'] ?? '';
+    $phone_number = "6666666";
     $duration_type = $_POST['duration_type'] ?? '';
     $duration_hours = $_POST['duration_hours'] ?? 0;
     $price_amount = $_POST['price_amount'] ?? 0;
@@ -59,16 +59,32 @@ function bookRoom() {
     $deposit_type = $_POST['deposit_type'] ?? '';
     $deposit_amount = $_POST['deposit_amount'] ?? 0;
     $notes = $_POST['notes'] ?? '';
-    
-    // Auto-calculate duration for fullday bookings
+
+    // Default, checkout_time null
+    $planned_checkout_time = null;
+
     if ($duration_type === 'fullday') {
-        if (empty($duration_hours) || $duration_hours == 0) {
-            // Calculate duration until 12 PM next day
+        if (!empty($arrival_time)) {
             $arrival = new DateTime($arrival_time);
+            $hour = (int)$arrival->format('H');
+            $minute = (int)$arrival->format('i');
+
             $checkout = clone $arrival;
-            $checkout->modify('+1 day')->setTime(12, 0, 0);
+            if (
+                ($hour < 23) ||
+                ($hour == 23 && $minute < 59) ||
+                ($hour == 0 && $minute <= 1)
+            ) {
+                $checkout->modify('+1 day');
+            }
+            $checkout->setTime(12, 0, 0); // Selalu 12:00:00
+
+            $planned_checkout_time = $checkout->format('Y-m-d H:i:s');
             $interval = $arrival->diff($checkout);
             $duration_hours = ($interval->days * 24) + $interval->h + ($interval->i > 0 ? 1 : 0);
+			
+            // Jika ingin simpan checkout_time (opsional):
+            // $checkout_time = $checkout->format('Y-m-d H:i:s');
         }
     }
     
@@ -104,11 +120,11 @@ function bookRoom() {
     // Create booking
     $stmt = $pdo->prepare("INSERT INTO bookings (room_id, guest_name, arrival_time, phone_number, 
                           duration_type, duration_hours, price_amount, payment_method, deposit_type, 
-                          deposit_amount, notes, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                          deposit_amount, notes, created_by, planned_checkout_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     
     $stmt->execute([$room_id, $guest_name, $arrival_time, $phone_number, $duration_type, 
                    $duration_hours, $price_amount, $payment_method, $deposit_type, 
-                   $deposit_amount, $notes, $_SESSION['user_id']]);
+                   $deposit_amount, $notes, $_SESSION['user_id'], $planned_checkout_time]);
     
     $booking_id = $pdo->lastInsertId();
     

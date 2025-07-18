@@ -236,8 +236,8 @@ if ($view == "bookings") {
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nama Tamu</th>
-                            <th>No HP</th>
+                            <!-- <th>Nama Tamu</th>
+                            <th>No HP</th> -->
                             <th>Checkin</th>
                             <th>Checkout</th>
                             <th>Kamar</th>
@@ -251,8 +251,8 @@ if ($view == "bookings") {
                         <?php else: foreach ($data as $row): ?>
                             <tr>
                                 <td><?= safe($row['id']) ?></td>
-                                <td><?= safe($row['guest_name']) ?></td>
-                                <td><?= safe($row['phone_number']) ?></td>
+                                <!-- <td><?= safe($row['guest_name']) ?></td>
+                                <td><?= safe($row['phone_number']) ?></td> -->
                                 <td><?= formatDateTime($row['checkin_time']) ?></td>
                                 <td><?= formatDateTime($row['checkout_time']) ?></td>
                                 <td><?= safe($row['room_id']) ?></td>
@@ -268,7 +268,7 @@ if ($view == "bookings") {
                         <tr>
                             <th>ID</th>
                             <th>Waktu</th>
-                            <th>Nama Customer</th>
+                            <!-- <th>Nama Customer</th> -->
                             <th>Nominal</th>
                             <th>Status</th>
                         </tr>
@@ -280,7 +280,7 @@ if ($view == "bookings") {
                             <tr>
                                 <td><?= safe($row['id']) ?></td>
                                 <td><?= formatDateTime($row['date']) ?></td>
-                                <td><?= safe($row['customer_name']) ?></td>
+                                <!-- <td><?= safe($row['customer_name']) ?></td> -->
                                 <td><?= function_exists('formatCurrency') ? formatCurrency($row['amount']) : number_format($row['amount'],0,',','.') ?></td>
                                 <td><?= safe($row['status']) ?></td>
                             </tr>
@@ -292,7 +292,7 @@ if ($view == "bookings") {
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nama Tamu</th>
+                            <!-- <th>Nama Tamu</th> -->
                             <th>Waktu Batal</th>
                             <th>Kamar</th>
                             <th>Harga</th>
@@ -305,7 +305,7 @@ if ($view == "bookings") {
                         <?php else: foreach ($data as $row): ?>
                             <tr>
                                 <td><?= safe($row['id']) ?></td>
-                                <td><?= safe($row['guest_name']) ?></td>
+                                <!-- <td><?= safe($row['guest_name']) ?></td> -->
                                 <td><?= formatDateTime($row['updated_at']) ?></td>
                                 <td><?= safe($row['room_id']) ?></td>
                                 <td><?= function_exists('formatCurrency') ? formatCurrency($row['price_amount']) : number_format($row['price_amount'],0,',','.') ?></td>

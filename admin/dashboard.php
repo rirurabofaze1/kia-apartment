@@ -156,8 +156,8 @@ $recent_bookings = $stmt->fetchAll();
                     <tr>
                         <th>ID</th>
                         <th>Room</th>
-                        <th>Guest</th>
-                        <th>Phone</th>
+                        <!-- <th>Guest</th>
+                        <th>Phone</th> -->
                         <th>Arrival</th>
                         <th>Status</th>
                         <th>Amount</th>
@@ -169,8 +169,8 @@ $recent_bookings = $stmt->fetchAll();
                     <tr>
                         <td><?php echo $booking['id']; ?></td>
                         <td><?php echo htmlspecialchars($booking['location'] . ' - ' . $booking['room_number']); ?></td>
-                        <td><?php echo htmlspecialchars($booking['guest_name']); ?></td>
-                        <td><?php echo htmlspecialchars($booking['phone_number']); ?></td>
+                        <!-- <td><?php echo htmlspecialchars($booking['guest_name']); ?></td>
+                        <td><?php echo htmlspecialchars($booking['phone_number']); ?></td> -->
                         <td><?php echo formatDateTime($booking['arrival_time']); ?></td>
                         <td>
                             <span class="status-<?php echo $booking['status']; ?>">

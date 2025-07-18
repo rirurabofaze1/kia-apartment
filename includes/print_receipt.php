@@ -7,7 +7,7 @@ if (!isLoggedIn()) {
 
 $booking_id = $_GET['booking_id'] ?? 0;
 
-// Get booking details
+// Get booking details (tambahkan planned_checkout_time jika ada di DB)
 $stmt = $pdo->prepare("SELECT b.*, r.room_number, r.location, r.room_type, r.wifi_name, r.floor_number, r.wifi_password, u.full_name as created_by_name 
                       FROM bookings b 
                       JOIN rooms r ON b.room_id = r.id 
@@ -94,14 +94,6 @@ $total_amount = $booking['price_amount'] + $booking['extra_time_amount'] - $book
     <p>Receipt ID: <?= $booking['id'] ?></p>
     <table>
         <tr>
-            <td>Guest</td>
-            <td style="text-align:right;"><?= htmlspecialchars($booking['guest_name']); ?></td>
-        </tr>
-        <tr>
-            <td>Phone</td>
-            <td style="text-align:right;"><?= htmlspecialchars($booking['phone_number']); ?></td>
-        </tr>
-        <tr>
             <td>Room</td>
             <td style="text-align:right;"><?= htmlspecialchars($booking['location'] . ' Lt ' . $booking['floor_number'] . ' No.' . $booking['room_number']); ?></td>
         </tr>
@@ -115,7 +107,15 @@ $total_amount = $booking['price_amount'] + $booking['extra_time_amount'] - $book
         </tr>
         <tr>
             <td>Duration</td>
-            <td style="text-align:right;"><?= $booking['duration_hours']; ?> Jam (<?= ucfirst($booking['duration_type']); ?>)</td>
+            <td style="text-align:right;">
+                <?php
+                if ($booking['duration_type'] == 'fullday') {
+                    echo "Full Day";
+                } else {
+                    echo $booking['duration_hours'] . " Jam (" . ucfirst($booking['duration_type']) . ")";
+                }
+                ?>
+            </td>
         </tr>
         <?php if ($booking['extra_time_hours'] > 0): ?>
         <tr>
@@ -133,7 +133,29 @@ $total_amount = $booking['price_amount'] + $booking['extra_time_amount'] - $book
             <td>Check-out</td>
             <td style="text-align:right;">
             <?php
-                if ($booking['checkin_time'] && $booking['duration_hours']) {
+                if ($booking['duration_type'] == 'fullday') {
+                    // Jika ada planned_checkout_time, pakai itu
+                    if (!empty($booking['planned_checkout_time'])) {
+                        echo formatDateTime($booking['planned_checkout_time']);
+                    } else if ($booking['checkin_time']) {
+                        // fallback, cari tanggal checkout dari tanggal checkin, tapi jam 12:00:00
+                        $checkin = new DateTime($booking['checkin_time']);
+                        $checkout = clone $checkin;
+                        $hour = (int)$checkin->format('H');
+                        $minute = (int)$checkin->format('i');
+                        if (
+                            ($hour < 23) ||
+                            ($hour == 23 && $minute < 59) ||
+                            ($hour == 0 && $minute <= 1)
+                        ) {
+                            $checkout->modify('+1 day');
+                        }
+                        $checkout->setTime(12, 0, 0);
+                        echo formatDateTime($checkout->format('Y-m-d H:i:s'));
+                    } else {
+                        echo '12:00 (TBA)';
+                    }
+                } else if ($booking['checkin_time'] && $booking['duration_hours']) {
                     $est_checkout = date('Y-m-d H:i:s', strtotime($booking['checkin_time'] . ' + ' . $booking['duration_hours'] . ' hours'));
                     echo formatDateTime($est_checkout);
                 } else {

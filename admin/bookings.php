@@ -147,7 +147,7 @@ $stats = $stmt->fetch();
                         <tr>
                             <th>ID</th>
                             <th>Room</th>
-                            <th>Guest Info</th>
+                            <!-- <th>Guest Info</th> -->
                             <th>Arrival Time</th>
                             <th>Duration</th>
                             <th>Amount</th>
@@ -176,10 +176,10 @@ $stats = $stmt->fetch();
                                     Room <?php echo htmlspecialchars($booking["room_number"]); ?><br>
                                     <small><?php echo htmlspecialchars($booking["room_type"]); ?></small>
                                 </td>
-                                <td>
+                                <!-- <td>
                                     <strong><?php echo htmlspecialchars($booking["guest_name"]); ?></strong><br>
                                     <?php echo htmlspecialchars($booking["phone_number"]); ?>
-                                </td>
+                                </td> -->
                                 <td>
                                     <?php echo formatDateTime($booking["arrival_time"]); ?>
                                     <?php if ($booking["checkin_time"]): ?>
